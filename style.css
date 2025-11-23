@@ -1,17 +1,119 @@
+
+:root {
+    --glow-color: rgb(249, 255, 216);
+    --glow: drop-shadow(0 0 .3em var(--glow-color));
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
 body {
-    height: 90vh;
+    height: 95vh;
+    /* overflow: hidden; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-h1 {
-    font-size: 2em;
-    width: max-content;
-    text-align: center;
-    color: #cb5bff;
-    font-family: Poppins, sans-serif;
-    font-weight: 400;
-    letter-spacing: -5%;
+.scene-container {
+    font-size: 1.3vw;
+    --ratio: calc(1352 / 845);
+    --width: 60em;
+    --height: calc(  var(--width) * 845 / 1352  );
+    width: var(--width);
+    height: var(--height);
+    position: relative;
+    background-image: url("assets/scene.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.scene-container > svg,
+.scene-container > img {
+    --size: 5em;
+    width: var(--size);
+    height: var(--size);
+    overflow: visible;    
+}
 
+
+.hoverable-object {
+    transform-origin: center;
+    cursor: pointer;
+    transition: filter 0.27s ease;
+}
+.hoverable-object:hover {
+    filter: var(--glow);
+    animation: wiggle 420ms steps(6, end) .27s;
+}
+
+#Calque-collier-chien,
+#Calque-music-box,
+#Calque-caillou,
+#Calque-dessin,
+#Calque-maneki,
+#Calque-fauteuil,
+#Calque-sweat,
+#Calque-ticket {
+    position: absolute;
+    transform-origin: center;
+}
+
+#Calque-collier-chien {
+    --size: 2em;
+    left: 18em;
+    top: 12em;
+}
+#Calque-music-box {
+    --size: 4em;
+    right: 13.25em;
+    top: 8em;
+}
+#Calque-caillou {
+    --size: 2.1em;
+    z-index: 20;
+    right: 17em;
+    bottom: 16.3em;
+}
+#Calque-dessin {
+    --size: 7.7em;
+    right: 22.8em;
+    top: 8.1em;
+}
+#Calque-maneki {
+    --size: 4em;
+    left: 6.5em;
+    top: 16.5em;
+}
+#Calque-fauteuil {
+    --size: 14.4em;
+    right: 4em;
+    bottom: 7em;
+}
+#Calque-sweat {
+    --size: 4.7em;
+    left: 47%;
+    bottom: 17.3em;
+}
+#Calque-ticket {
+    --size: 2.7em;
+    right: 23.5em;
+    bottom: 8.2em;
+}
+
+
+@media screen and (max-width: 1044px) {
+    .scene-container {
+        font-size: 1.6vw;
+    }
+}
+
+@keyframes wiggle {
+  0%   { transform: rotate(0deg); }
+  16%  { transform: rotate(-2deg); }
+  33%  { transform: rotate(2deg); }
+  50%  { transform: rotate(-2deg); }
+  66%  { transform: rotate(1deg); }
+  83%  { transform: rotate(-1deg); }
+  100% { transform: rotate(0deg); }
 }
