@@ -28,23 +28,38 @@ body {
     background-repeat: no-repeat;
     background-size: contain;
 }
-.scene-container > svg,
-.scene-container > img {
+.scene-container svg {
     --size: 5em;
+    display: block;
     width: var(--size);
     height: var(--size);
-    overflow: visible;    
+    overflow: visible;
 }
 
 
 .hoverable-object {
-    transform-origin: center;
     cursor: pointer;
     transition: filter 0.27s ease;
+    transform-origin: center;
 }
-.hoverable-object:hover {
+.hoverable-object:hover,
+.object-selected {
+    transform-origin: center;
     filter: var(--glow);
     animation: wiggle 420ms steps(6, end) .27s;
+}
+.object-selected {
+    cursor: grab;
+    /* animation: wiggle 420ms steps(6, end) .27s inf; */
+}
+.done {
+    animation: disappear .5s ease forwards;
+}
+
+@keyframes disappear {
+    to {
+        opacity: 0%;
+    }
 }
 
 #Calque-collier-chien,
@@ -54,9 +69,9 @@ body {
 #Calque-maneki,
 #Calque-fauteuil,
 #Calque-sweat,
-#Calque-ticket {
+#Calque-ticket,
+.Calque-carton {
     position: absolute;
-    transform-origin: center;
 }
 
 #Calque-collier-chien {
@@ -100,6 +115,32 @@ body {
     right: 23.5em;
     bottom: 8.2em;
 }
+
+
+
+/* Cartons */
+.Calque-carton {
+    --size: 10.5em !important;
+    --inline-offset: 5em;
+    bottom: -1em;
+    transform-origin: center;
+    opacity: 0;
+    transform: translateY(1em);
+    transition: opacity .25s ease, transform .5s ease;
+}
+.Calque-carton.active {
+    opacity: 1;
+    transform: none;
+}
+
+.Calque-carton.keep {
+    left: var(--inline-offset);
+}
+.Calque-carton.throw {
+    right: var(--inline-offset);
+}
+
+
 
 
 @media screen and (max-width: 1044px) {
