@@ -10,14 +10,14 @@
 
 body {
     height: 95vh;
-    /* overflow: hidden; */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 .scene-container {
-    font-size: 1.3vw;
+    font-size: 1.15vw;
     --ratio: calc(1352 / 845);
     --width: 60em;
     --height: calc(  var(--width) * 845 / 1352  );
@@ -27,6 +27,7 @@ body {
     background-image: url("assets/scene.svg");
     background-repeat: no-repeat;
     background-size: contain;
+    animation: fade-in .4s ease forwards;
 }
 .scene-container svg {
     --size: 5em;
@@ -122,6 +123,7 @@ body {
 .Calque-carton {
     --size: 10.5em !important;
     --inline-offset: 5em;
+    z-index: 50;
     bottom: -1em;
     transform-origin: center;
     opacity: 0;
@@ -167,18 +169,28 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 999;
+  animation: fade-in .4s ease forwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .scene-overlay img {
-  max-width: 60vw;
-  max-height: 60vh;
-  object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-  cursor: pointer;
-  transform: rotate(-3deg);
+    max-width: 60vw;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transform: rotate(-3deg);
 }
 
 .hidden {
-  display: none;
+    display: none;
 }

@@ -1,13 +1,9 @@
 const objects = document.querySelectorAll(".hoverable-object");
 const sceneContainer = document.querySelector(".scene-container");
 const cartons = document.querySelectorAll("#carton");
+
 const overlay = document.getElementById("scene-overlay");
 const scenePhoto = document.getElementById("scene-photo");
-
-
-
-console.log("objects", objects);
-console.log("cartons", cartons);
 
 
 let activeObject = null;
@@ -15,7 +11,6 @@ let currentObject = null;
 let keptObjects = [];
 let thrownObjects = [];
 let dragging = false;
-
 
 
 objects.forEach(object => {
@@ -27,14 +22,17 @@ objects.forEach(object => {
 
         if (activeObject !== null) { return; }        
         
+        activeObject = object;
+
         const scenePhotoPath = object.dataset.scene;
 
         if (!scenePhotoPath) {
-            console.warn("no data-scene")
+            console.warn("No data-scene !");
+            // Case of the ticket
+            startBoxSelection(activeObject);
             return;
         }
 
-        currentObject = object;
 
         scenePhoto.src = scenePhotoPath;
         overlay.classList.remove("hidden");
@@ -47,7 +45,7 @@ scenePhoto.addEventListener("click", () => {
     overlay.classList.add("hidden");
     scenePhoto.src = "";
 
-    startBoxSelection(currentObject);
+    startBoxSelection(activeObject);
 });
 
 
@@ -56,7 +54,6 @@ function startBoxSelection(object) {
     // Now the user has to choose whether or not to keep the object.
     activeObject = object;
     activeObject.classList.add("object-selected");
-    activeObject.parentElement.style.zIndex = 99;
     
     let offsetX = 0;
     let offsetY = 0;
@@ -79,15 +76,37 @@ function startBoxSelection(object) {
         offsetX = sceneContainer.offsetLeft + (widthElement/2); 
         offsetY = sceneContainer.offsetTop + (heightElement/2);
     });
+    activeObject.addEventListener("touchstart", (e) => {
+        dragging = true;
+        activeObject.style.cursor = "grabbing";
+
+        const widthElement = parseFloat(window.getComputedStyle(activeObject.parentElement)["width"].replace("px", ""));
+        const heightElement = parseFloat(window.getComputedStyle(activeObject.parentElement)["height"].replace("px", ""));
+        // offset of the container to properly place the dragged object onto the mouse on mousemove
+        offsetX = sceneContainer.offsetLeft + (widthElement/2); 
+        offsetY = sceneContainer.offsetTop + (heightElement/2);
+    });
 
     document.addEventListener("mousemove", (e) => {
         if (!dragging) return;
-        activeObject.parentElement.style.left = (e.clientX - offsetX) + "px";
-        activeObject.parentElement.style.top = (e.clientY - offsetY) + "px";
+        activeObject.parentElement.style.zIndex = 99;
+        const x = e.clientX || e.targetTouches[0].pageX;
+        const y = e.clientY || e.targetTouches[0].pageY;
+        activeObject.parentElement.style.left = (x - offsetX) + "px";
+        activeObject.parentElement.style.top = (y - offsetY) + "px";
+    });
+    document.addEventListener("touchmove", (e) => {
+        if (!dragging) return;
+        activeObject.parentElement.style.zIndex = 99;
+        const x = e.clientX || e.targetTouches[0].pageX;
+        const y = e.clientY || e.targetTouches[0].pageY;
+        activeObject.parentElement.style.left = (x - offsetX) + "px";
+        activeObject.parentElement.style.top = (y - offsetY) + "px";
     });
     
     // More complex function, appart from the main code down below
     document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("touchend", handleMouseUp);
 
 }
 
@@ -96,7 +115,9 @@ function handleMouseUp(e) {
     activeObject.style.cursor = "grab";
     if (dragging) {
         activeObject.parentElement.style.pointerEvents = "none"; // Removing pointer events, to get the element under the dragged one
-        const elemUnder = document.elementFromPoint(e.clientX, e.clientY); // getting the element under the dragged one
+        const x = e.clientX || e.targetTouches[0].pageX;
+        const y = e.clientY || e.targetTouches[0].pageY;
+        const elemUnder = document.elementFromPoint(x, y); // getting the element under the dragged one
         cartons.forEach(carton => {
             // If cupboard is under the mouse, make the element disappear
             if (carton.contains(elemUnder) || carton === elemUnder) {
