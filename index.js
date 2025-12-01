@@ -1,6 +1,14 @@
+const startBtn = document.querySelector("#start");
+const creditsBtn = document.querySelector("#credits");
+const titleSection = document.querySelector(".title-screen")
+
+console.log(startBtn);
+console.log(creditsBtn);
+
 const objects = document.querySelectorAll(".hoverable-object");
 const sceneContainer = document.querySelector(".scene-container");
 const cartons = document.querySelectorAll("#carton");
+
 
 const overlay = document.getElementById("scene-overlay");
 const scenePhoto = document.getElementById("scene-photo");
@@ -11,6 +19,18 @@ let currentObject = null;
 let keptObjects = [];
 let thrownObjects = [];
 let dragging = false;
+
+startBtn.addEventListener("click", () => {
+    titleSection.classList.add("disappear");
+    document.documentElement.style.background = "whitesmoke";
+    titleSection.addEventListener("transitionend", ()=> {
+        titleSection.style.display = "none";
+        sceneContainer.style.display = "block";
+        sceneContainer.classList.add('visible');
+    }, {once: true})
+})
+
+
 
 
 objects.forEach(object => {

@@ -2,10 +2,19 @@
 :root {
     --glow-color: rgb(249, 255, 216);
     --glow: drop-shadow(0 0 .3em var(--glow-color));
+    --bg-color: #392440;
+    --primary-color: #FF82A9;
+    --secondary-color: #7F95D1;
+    --transition-duration: .5s;
 }
 
 * {
     -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    background: var(--bg-color);
+    transition: background-color var(--transition-duration) ease;
 }
 
 body {
@@ -16,6 +25,54 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.title-screen {
+    font-size: .9rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity var(--transition-duration) ease;
+}
+.title-screen.disappear {
+    opacity: 0;
+}
+
+.title-screen h1 {
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 4em;
+    letter-spacing: -1%;
+    font-weight: 670;
+    text-shadow: 0 0 .4em rgba(206, 127, 248, 0.444);
+    margin-block: .5em;
+}
+.title-screen * {
+    display: block;
+    font-family: "Rubik";
+}
+.title-screen button {
+    background: var(--primary-color);
+    color: #4b2f50;
+    font-weight: 480;
+    margin-block: .4em;
+    text-shadow: 0 0 1em whitesmoke;
+    cursor: pointer;
+    border-radius: .35em;
+    appearance: none;
+    border: none;
+    padding: .45em .6em;
+    font-size: 1.5em;
+    transition: box-shadow .3s ease, color .3s ease;
+    box-shadow: 0 0 .4em .1em rgba(206, 127, 248, 0.3);
+}
+.title-screen button:hover {
+    color: rgba(254, 212, 255, .9);
+    box-shadow: 0 0 .4em .2em rgba(206, 127, 248, 0.344);
+}
+
+
 .scene-container {
     font-size: 1.15vw;
     --ratio: calc(1352 / 845);
@@ -27,8 +84,9 @@ body {
     background-image: url("assets/scene.svg");
     background-repeat: no-repeat;
     background-size: contain;
-    animation: fade-in .4s ease forwards;
+    animation: fade-in var(--transition-duration) ease forwards;
 }
+
 .scene-container svg {
     --size: 5em;
     display: block;
@@ -146,6 +204,9 @@ body {
 
 
 @media screen and (max-width: 1044px) {
+    .title-screen {
+        font-size: .8em;
+    }
     .scene-container {
         font-size: 1.6vw;
     }
