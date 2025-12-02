@@ -85,6 +85,8 @@ body {
     background-repeat: no-repeat;
     background-size: contain;
     animation: fade-in var(--transition-duration) ease forwards;
+    opacity: 1;
+    transition: opacity 0.6s ease;
 }
 
 .scene-container svg {
@@ -95,6 +97,9 @@ body {
     overflow: visible;
 }
 
+.scene-container.fade-out {
+    opacity: 0;
+}
 
 .hoverable-object {
     cursor: pointer;
@@ -243,15 +248,28 @@ body {
 }
 
 .scene-overlay img {
-    max-width: 60vw;
-    max-height: 60vh;
+    max-width: 80vw;
+    max-height: 80vh;
     object-fit: contain;
     border-radius: 8px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     cursor: pointer;
-    transform: rotate(-3deg);
 }
 
 .hidden {
     display: none;
+}
+
+.fade-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  opacity: 0;              
+  pointer-events: none;  
+  transition: opacity 0.6s ease;
+  z-index: 900;           
+}
+
+.fade-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;    
 }

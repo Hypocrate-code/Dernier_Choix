@@ -10,8 +10,10 @@ const sceneContainer = document.querySelector(".scene-container");
 const cartons = document.querySelectorAll("#carton");
 
 
+
 const overlay = document.getElementById("scene-overlay");
 const scenePhoto = document.getElementById("scene-photo");
+const fadeOverlay = document.getElementById("fade-overlay");
 
 
 let activeObject = null;
@@ -46,16 +48,10 @@ objects.forEach(object => {
 
         const scenePhotoPath = object.dataset.scene;
 
-        if (!scenePhotoPath) {
-            console.warn("No data-scene !");
-            // Case of the ticket
-            startBoxSelection(activeObject);
-            return;
-        }
-
-
-        scenePhoto.src = scenePhotoPath;
-        overlay.classList.remove("hidden");
+        fadeOverlayTo(1,800, () => {
+            scenePhoto.src = scenePhotoPath;
+            overlay.classList.remove("hidden");
+        });
        
 
     }, {once: true})
@@ -65,7 +61,11 @@ scenePhoto.addEventListener("click", () => {
     overlay.classList.add("hidden");
     scenePhoto.src = "";
 
-    startBoxSelection(activeObject);
+    fadeOverlayTo(0,800, () => {
+        startBoxSelection(activeObject);
+    });
+       
+
 });
 
 
@@ -164,4 +164,25 @@ function handleMouseUp(e) {
         }
     }
     dragging = false;
+}
+
+function fadeOverlayTo(targetOpacity, duration = 600, callback) {
+    if (!fadeOverlay) {
+        if (callback) callback();
+        return;
+    }
+
+    fadeOverlay.style.transitionDuration = duration + "ms";
+
+    if (targetOpacity === 1) {
+        fadeOverlay.classList.add("visible");   // opacity: 1
+    } else {
+        fadeOverlay.classList.remove("visible"); // opacity: 0
+    }
+
+    if (callback) {
+        setTimeout(() => {
+            callback();
+        }, duration);
+    }
 }
