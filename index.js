@@ -14,6 +14,8 @@ const cartons = document.querySelectorAll("#carton");
 const overlay = document.getElementById("scene-overlay");
 const scenePhoto = document.getElementById("scene-photo");
 const fadeOverlay = document.getElementById("fade-overlay");
+const sceneCaption = document.getElementById("scene-caption");
+
 
 
 let activeObject = null;
@@ -21,6 +23,11 @@ let currentObject = null;
 let keptObjects = [];
 let thrownObjects = [];
 let dragging = false;
+
+let sceneCaptionTimer = null;
+let currentCaptionIndex = 0;
+let currentCaptionLines = [];
+
 
 startBtn.addEventListener("click", () => {
     titleSection.classList.add("disappear");
@@ -51,6 +58,7 @@ objects.forEach(object => {
         fadeOverlayTo(1,800, () => {
             scenePhoto.src = scenePhotoPath;
             overlay.classList.remove("hidden");
+            startSceneCaption(activeObject);
         });
        
 
@@ -58,6 +66,7 @@ objects.forEach(object => {
 })
 
 scenePhoto.addEventListener("click", () => {
+    stopSceneCaption();
     overlay.classList.add("hidden");
     scenePhoto.src = "";
 
@@ -185,4 +194,80 @@ function fadeOverlayTo(targetOpacity, duration = 600, callback) {
             callback();
         }, duration);
     }
+}
+
+function startSceneCaption(object, intervalMs = 3500, fadeMs = 300) {
+    if (!sceneCaption) return;
+
+    const raw = object.dataset.story;
+    if (!raw) return;
+
+    currentCaptionLines = raw
+        .split("|")
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+
+    if (currentCaptionLines.length === 0) return;
+
+    // 他のキャプションが動いていたら停止
+    if (sceneCaptionTimer) {
+        clearTimeout(sceneCaptionTimer);
+        sceneCaptionTimer = null;
+    }
+
+    currentCaptionIndex = 0;
+
+    // --- 最初の行をフェードインして表示 ---
+    sceneCaption.textContent = currentCaptionLines[0];
+    sceneCaption.classList.remove("hidden");
+
+    requestAnimationFrame(() => {
+        sceneCaption.classList.add("visible");
+    });
+
+    // --- 次の行をふわっと切り替える関数 ---
+    function showNextLine() {
+        currentCaptionIndex++;
+
+        if (currentCaptionIndex >= currentCaptionLines.length) {
+            return; // 最後まで行ったら終了
+        }
+
+        // まずフェードアウト（visible を外す）
+        sceneCaption.classList.remove("visible");
+
+        // フェードアウトが終わる timing でテキスト入れ替え
+        setTimeout(() => {
+            sceneCaption.textContent = currentCaptionLines[currentCaptionIndex];
+
+            // 次のフレームで visible を戻す → フェードイン
+            requestAnimationFrame(() => {
+                sceneCaption.classList.add("visible");
+            });
+        }, fadeMs);
+
+        // 次の行へ（テキスト切り替えと fade の両方を考慮して interval を調整）
+        sceneCaptionTimer = setTimeout(showNextLine, intervalMs);
+    }
+
+    // interval 後に 2行目へ
+    sceneCaptionTimer = setTimeout(showNextLine, intervalMs);
+}
+
+
+function stopSceneCaption() {
+    if (sceneCaptionTimer) {
+        clearInterval(sceneCaptionTimer);
+        sceneCaptionTimer = null;
+    }
+
+    if (!sceneCaption) return;
+
+    sceneCaption.classList.remove("visible");
+    setTimeout(() => {
+        sceneCaption.classList.add("hidden");
+        sceneCaption.textContent = "";
+        currentCaptionLines = [];
+        currentCaptionIndex = 0;
+    }, 200); 
 }

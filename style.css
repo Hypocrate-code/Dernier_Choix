@@ -259,6 +259,43 @@ body {
     display: none;
 }
 
+.scene-caption {
+    position: absolute;       /* 画面に対して固定表示 */
+    left: 50%;
+    bottom: 5%;            /* 下から5%くらい上 */
+
+    width: 65vw;           /* 横幅は画面の80% */
+    padding: 16px 20px;
+    
+    background: rgba(255, 255, 255, 0.8); /* 半透明の白 */
+    color: #000;           /* テキストは黒 */
+    
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: left;
+    font-family: Geologica, sans-serif;
+
+    opacity: 0;
+    transform: translate(-50%, 15px); /* 少し下から浮いてくる */
+    transition: opacity 300ms ease, transform 300ms ease;
+
+    z-index: 2000;         /* scenePhoto より上に */
+    pointer-events: none;  /* テキストボックスは操作不要なので消しておく */
+}
+
+.scene-caption.visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.scene-caption.hidden {
+    display: none;
+}
+
+
 .fade-overlay {
   position: fixed;
   inset: 0;
