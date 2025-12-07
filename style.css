@@ -20,7 +20,7 @@
 }
 
 html {
-    background: var(--bg-color);
+    animation: bg-intro 50s linear paused forwards;
     transition: background-color var(--transition-duration) ease;
 }
 
@@ -94,6 +94,57 @@ body {
     animation: fade-in var(--transition-duration) ease forwards;
     opacity: 1;
     transition: opacity 0.6s ease;
+    pointer-events: none;
+}
+
+.intro {
+    --duration: 3s;
+    --delay: 10s;
+    position: absolute;
+    inset: 0;
+    z-index: 2000;
+    animation-play-state: paused;
+    animation: disappear var(--duration) linear forwards;
+}
+
+@keyframes bg-intro {
+    0% {
+        background: #2b2939;
+    }
+    20% {
+        background: #2b2939;
+    }
+    26% {
+        background: #4A4751;
+    }
+    46% {
+        background: #4A4751;
+    }
+    52% {
+        background: #696369;
+    }
+    72% {
+        background: #696369;
+    }
+    78% {
+        background: #f9ecd7;
+    }
+    to {
+        background: #f9ecd7;
+    }
+}
+
+.intro:nth-child(1) {
+    animation-delay: calc(var(--delay) * 3 + var(--duration) * 2);
+    background-image: url("./assets/scenes/intro/3.svg");
+}
+.intro:nth-child(2) {
+    animation-delay: calc(var(--delay) * 2 + var(--duration));
+    background-image: url("./assets/scenes/intro/2.svg");
+}
+.intro:nth-child(3) {
+    animation-delay: var(--delay);
+    background-image: url("./assets/scenes/intro/1.svg");
 }
 
 .scene-container svg {
@@ -193,7 +244,7 @@ body {
 .Calque-carton {
     --size: 11em !important;
     --inline-offset: 5em;
-    z-index: 50;
+    z-index: -1;
     bottom: 0;
     transform-origin: center;
     opacity: 0;

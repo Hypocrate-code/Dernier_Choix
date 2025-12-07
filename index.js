@@ -5,6 +5,7 @@ const titleSection = document.querySelector(".title-screen")
 console.log(startBtn);
 console.log(creditsBtn);
 
+const intros = document.querySelectorAll(".intro");
 const objects = document.querySelectorAll(".hoverable-object");
 const sceneContainer = document.querySelector(".scene-container");
 const cartons = document.querySelectorAll("#carton");
@@ -28,14 +29,43 @@ let sceneCaptionTimer = null;
 let currentCaptionIndex = 0;
 let currentCaptionLines = [];
 
+const AUDIOS_SRC = {
+    "music-box" : "audios/boite-a-musique/audio.mp3",
+    "caillou": "audios/caillou/audio.mp3",
+    "collier" : "audios/collier/audio.mp3",
+    "dessin" : "audios/dessin/audio.mp3",
+    "maneki" : "audios/maneki/audio.mp3",
+    "fauteuil" : "audios/meuble/audio.mp3",
+    "pull" : "audios/pull/audio.mp3",
+    "ticket" : "audios/ticket/audio.mp3"
+}
+
+const SOUND_EFFECTS_SRC = {
+    "music-box" : "",
+    "caillou": "",
+    "collier" : "",
+    "dessin" : "",
+    "maneki" : "",
+    "fauteuil" : "",
+    "pull" : "",
+    "ticket" : ""
+}
+
 
 startBtn.addEventListener("click", () => {
-    document.documentElement.style.background = "#f9ecd7";
+    
     titleSection.classList.add("disappear");
     titleSection.addEventListener("transitionend", ()=> {
+        const audioIntro = new Audio("./audios/intro.mp3");
+        audioIntro.play();
+        audioIntro.addEventListener("ended", ()=> {
+            sceneContainer.style.pointerEvents = "auto";
+        }, {once: true})
+        intros.forEach(intro => intro.style.animationPlayState = "running");
+        document.documentElement.style.animationPlayState = "running";
         titleSection.style.display = "none";
-        sceneContainer.style.display = "block";
         sceneContainer.classList.add('visible');
+        sceneContainer.style.display = "block";
     }, {once: true})
 })
 
@@ -44,38 +74,35 @@ startBtn.addEventListener("click", () => {
 
 objects.forEach(object => {
     object.addEventListener("click", () => {
-        
-// When clicking an object, i instantly did the "choose to keep or throw away" scene.
-// Whereas, the game has to first launch the memory of the object, before making the player choose.
-// That's why you probably have to insert your code (managing scenes) before the following code.
 
         if (activeObject !== null) { return; }        
         
         activeObject = object;
 
-        const scenePhotoPath = object.dataset.scene;
+        scenePhoto.src = object.dataset.scene;
+        const audio = new Audio(AUDIOS_SRC[activeObject.parentElement.dataset.name]);
 
         fadeOverlayTo(1,800, () => {
-            scenePhoto.src = scenePhotoPath;
             overlay.classList.remove("hidden");
+            audio.play();
             startSceneCaption(activeObject);
+            audio.addEventListener("ended", () => {
+                stopSceneCaption();
+                overlay.classList.add("hidden");
+                scenePhoto.src = "";
+
+                fadeOverlayTo(0, 800, () => {
+                    startBoxSelection(activeObject);
+                });
+
+            }, { once: true });
         });
        
 
     }, {once: true})
 })
 
-scenePhoto.addEventListener("click", () => {
-    stopSceneCaption();
-    overlay.classList.add("hidden");
-    scenePhoto.src = "";
 
-    fadeOverlayTo(0,800, () => {
-        startBoxSelection(activeObject);
-    });
-       
-
-});
 
 
 
@@ -92,6 +119,7 @@ function startBoxSelection(object) {
     
     // Make cupboards appear
     cartons.forEach(carton => {
+        carton.parentElement.style.zIndex = 50;
         carton.parentElement.classList.add("active");
     })
         
@@ -157,7 +185,10 @@ function handleMouseUp(e) {
                 activeObject.classList.add("done");
                 activeObject.addEventListener("animationend", ()=>{
                     // Reseting scene
-                    cartons.forEach(carton => {carton.parentElement.classList.remove("active");})
+                    cartons.forEach(carton => {
+                        carton.parentElement.classList.remove("active");
+                        carton.parentElement.addEventListener("transitionend", () => carton.parentElement.style.zIndex = -1, { once: true})
+                    })
                     objects.forEach(object=>object.classList.add("hoverable-object"));
                 })
                 activeObject = null;
