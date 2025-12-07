@@ -30,8 +30,8 @@ let currentCaptionLines = [];
 
 
 startBtn.addEventListener("click", () => {
+    document.documentElement.style.background = "#f9ecd7";
     titleSection.classList.add("disappear");
-    document.documentElement.style.background = "whitesmoke";
     titleSection.addEventListener("transitionend", ()=> {
         titleSection.style.display = "none";
         sceneContainer.style.display = "block";

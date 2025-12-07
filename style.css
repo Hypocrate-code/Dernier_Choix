@@ -7,6 +7,13 @@
     --secondary-color: #7F95D1;
     --transition-duration: .5s;
 }
+*,
+*::after,
+*::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
 
 * {
     -webkit-tap-highlight-color: transparent;
@@ -18,7 +25,7 @@ html {
 }
 
 body {
-    height: 95vh;
+    height: 100vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -72,16 +79,16 @@ body {
     box-shadow: 0 0 .4em .2em rgba(206, 127, 248, 0.344);
 }
 
-
 .scene-container {
-    font-size: 1.15vw;
+    --height: 100vh;
     --ratio: calc(1352 / 845);
-    --width: 60em;
-    --height: calc(  var(--width) * 845 / 1352  );
+    --width: calc(var(--height) * var(--ratio));
+    --font-size: calc(var(--height) * .0268);
+    font-size: var(--font-size);
     width: var(--width);
     height: var(--height);
     position: relative;
-    background-image: url("assets/scene.svg");
+    background-image: url("assets/scenes/scene-sans-objet.svg");
     background-repeat: no-repeat;
     background-size: contain;
     animation: fade-in var(--transition-duration) ease forwards;
@@ -140,54 +147,54 @@ body {
 
 #Calque-collier-chien {
     --size: 2em;
-    left: 18em;
-    top: 12em;
+    left: 17.5em;
+    top: 12.8em;
 }
 #Calque-music-box {
     --size: 4em;
-    right: 13.25em;
-    top: 8em;
+    right: 15.5em;
+    top: 9em;
 }
 #Calque-caillou {
-    --size: 2.1em;
+    --size: 2em;
     z-index: 20;
-    right: 17em;
-    bottom: 16.3em;
+    right: 18.2em;
+    bottom: 19.65em;
 }
 #Calque-dessin {
-    --size: 7.7em;
-    right: 22.8em;
-    top: 8.1em;
+    --size: 7.4em;
+    right: 25.2em;
+    top: 9.1em;
 }
 #Calque-maneki {
     --size: 4em;
-    left: 6.5em;
-    top: 16.5em;
+    left: 5.5em;
+    top: 17.7em;
 }
 #Calque-fauteuil {
-    --size: 14.4em;
-    right: 4em;
-    bottom: 7em;
+    --size: 15.3em;
+    right: 2.8em;
+    bottom: 4.5em;
 }
 #Calque-sweat {
     --size: 4.7em;
-    left: 47%;
-    bottom: 17.3em;
+    left: 46.3%;
+    bottom: 16.3em;
 }
 #Calque-ticket {
     --size: 2.7em;
-    right: 23.5em;
-    bottom: 8.2em;
+    right: 24em;
+    bottom: 6.4em;
 }
 
 
 
 /* Cartons */
 .Calque-carton {
-    --size: 10.5em !important;
+    --size: 11em !important;
     --inline-offset: 5em;
     z-index: 50;
-    bottom: -1em;
+    bottom: 0;
     transform-origin: center;
     opacity: 0;
     transform: translateY(1em);
@@ -205,17 +212,6 @@ body {
     right: var(--inline-offset);
 }
 
-
-
-
-@media screen and (max-width: 1044px) {
-    .title-screen {
-        font-size: .8em;
-    }
-    .scene-container {
-        font-size: 1.6vw;
-    }
-}
 
 @keyframes wiggle {
   0%   { transform: rotate(0deg); }
@@ -248,8 +244,8 @@ body {
 }
 
 .scene-overlay img {
-    max-width: 80vw;
-    max-height: 80vh;
+    max-width: 70vw;
+    max-height: 70vh;
     object-fit: contain;
     border-radius: 8px;
     cursor: pointer;
@@ -264,22 +260,22 @@ body {
     left: 50%;
     bottom: 5%;            /* 下から5%くらい上 */
 
-    width: 65vw;           /* 横幅は画面の80% */
-    padding: 16px 20px;
+    width: 60vw;           /* 横幅は画面の80% */
+    padding: .5em .6em;
     
     background: rgba(255, 255, 255, 0.8); /* 半透明の白 */
     color: #000;           /* テキストは黒 */
     
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    border-radius: .4em;
+    box-shadow: 0 4px 20px rgba(0,0,0,.2);
 
-    font-size: 16px;
+    font-size: 1em;
     line-height: 1.5;
     text-align: left;
     font-family: Geologica, sans-serif;
 
     opacity: 0;
-    transform: translate(-50%, 15px); /* 少し下から浮いてくる */
+    transform: translate(-50%, 50%); /* 少し下から浮いてくる */
     transition: opacity 300ms ease, transform 300ms ease;
 
     z-index: 2000;         /* scenePhoto より上に */
@@ -295,7 +291,6 @@ body {
     display: none;
 }
 
-
 .fade-overlay {
   position: fixed;
   inset: 0;
@@ -309,4 +304,21 @@ body {
 .fade-overlay.visible {
   opacity: 1;
   pointer-events: auto;    
+}
+
+
+
+@media screen and (max-width: 1044px) {
+    .title-screen {
+        font-size: .7em;
+    }
+}
+
+@media screen and (max-aspect-ratio: 1352/845) {
+    .scene-container {
+        --height: calc(var(--width) * var(--ratio));
+        --ratio: calc(845 / 1352);
+        --width: 100vw;
+        --font-size: 1.67vw;
+    }
 }
