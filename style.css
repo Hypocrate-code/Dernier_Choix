@@ -85,7 +85,7 @@ body {
 }
 .options {
     display: flex;
-    margin-top: 5em;
+    margin-top: 1em;
     gap: 1.5em;
     font-size: .8em;
 }
@@ -337,30 +337,29 @@ body {
     left: 50%;
     bottom: 5%;            /* 下から5%くらい上 */
 
-    width: 60vw;           /* 横幅は画面の80% */
-    padding: .5em .6em;
+    width: 70vw;           /* 横幅は画面の80% */
+    padding: 1em 1.5em;
     
-    background: rgba(255, 255, 255, 0.8); /* 半透明の白 */
-    color: #000;           /* テキストは黒 */
+    background: var(--cream); /* 半透明の白 */
+    color: var(--dark-brown);           /* テキストは黒 */
     
     border-radius: .4em;
-    box-shadow: 0 4px 20px rgba(0,0,0,.2);
-
-    font-size: 1em;
     line-height: 1.5;
     text-align: left;
-
+    
     opacity: 0;
-    transform: translate(-50%, 50%); /* 少し下から浮いてくる */
-    transition: opacity 300ms ease, transform 300ms ease;
-
+    transform: translate(-50%, 0); /* 少し下から浮いてくる */
+    transition: opacity 250ms ease;
+    
+    font-family: var(--serif-font);
+    font-weight: 400;
+    font-size: 1em;
     z-index: 2000;         /* scenePhoto より上に */
     pointer-events: none;  /* テキストボックスは操作不要なので消しておく */
 }
 
 .scene-caption.visible {
     opacity: 1;
-    transform: translate(-50%, 0);
 }
 
 .scene-caption.hidden {
@@ -385,8 +384,13 @@ body {
 
 
 @media screen and (max-width: 1044px) {
-    .title-screen {
-        font-size: .7em;
+    html {
+        font-size: .9em;
+    }
+}
+@media screen and (max-width: 704px) {
+    html {
+        font-size: .9em;
     }
 }
 

@@ -46,20 +46,32 @@ const SOUND_EFFECTS_SRC = {
     "ticket" : ""
 }
 
+const startObject = {
+    dataset: {
+        intervals: "9000, 6000, 4000, 6000, 6500",
+        story: "Dans trois jours, nouvelle vie. Nouvelle ville et nouveau studio microscopique. Et moi, plantée là avec mes cartons vides et mes souvenirs partout.|L'opportunité professionnelle que j'ai acceptée m'emmène vers un avenir prometteur, mais dans une ville plus chère où chaque mètre carré compte.|Mon futur studio sera trois fois plus petit que cet espace où j'ai vécu tant d'histoires.|La peluche. Le journal. Le canapé. Les meubles chinés. Chaque objet me regarde comme si je trahissais une partie de moi.|Derrière moi, les fantômes d'une histoire qui s'achève, les objets, eux, n'ont pas encore compris qu'il fallait partir.|Allez, pas le temps de pleurer. Il faut choisir, garder l'essentiel mais certains objets sont plus difficiles à trier que d’autres."
+    }
+};
+
+
 intros.forEach(intro => intro.addEventListener('animationend', () => {intro.style.display = "none"}, {once: true}))
 
 startBtn.addEventListener("click", () => {
     titleSection.classList.add("disappear");
     titleSection.addEventListener("transitionend", ()=> {
         const audioIntro = new Audio("./audios/intro.mp3");
+        audioIntro.addEventListener("play", () => {
+            startSceneCaption(startObject);
+        })
         audioIntro.play();
-        audioIntro.addEventListener("ended", ()=> {
-            sceneContainer.style.pointerEvents = "auto";
-        }, {once: true})
         intros.forEach(intro => intro.style.animationPlayState = "running");
         document.documentElement.style.animationPlayState = "running";
         titleSection.style.display = "none";
         sceneContainer.style.display = "block";
+        audioIntro.addEventListener("ended", ()=> {
+            sceneContainer.style.pointerEvents = "auto";
+            stopSceneCaption();
+        }, {once: true})
     }, {once: true})
 })
 
@@ -216,7 +228,7 @@ function fadeOverlayTo(targetOpacity, duration = 600, callback) {
     }
 }
 
-function startSceneCaption(object, defaultInterval = 3500, fadeMs = 300) {
+function startSceneCaption(object, defaultInterval = 3500, fadeMs = 250) {
     if (!sceneCaption) return;
 
     const raw = object.dataset.story;
