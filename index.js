@@ -196,7 +196,7 @@ function fadeOverlayTo(targetOpacity, duration = 600, callback) {
     }
 }
 
-function startSceneCaption(object, intervalMs = 3500, fadeMs = 300) {
+function startSceneCaption(object, defaultInterval = 3500, fadeMs = 300) {
     if (!sceneCaption) return;
 
     const raw = object.dataset.story;
@@ -208,6 +208,11 @@ function startSceneCaption(object, intervalMs = 3500, fadeMs = 300) {
         .filter(s => s.length > 0);
 
     if (currentCaptionLines.length === 0) return;
+
+    const intervals = (object.dataset.intervals || "")
+    .split(",")
+    .map(s => parseInt(s.trim(), 10))
+    .map(v => (isNaN(v) ? defaultInterval : v)); 
 
     // 他のキャプションが動いていたら停止
     if (sceneCaptionTimer) {
@@ -246,12 +251,12 @@ function startSceneCaption(object, intervalMs = 3500, fadeMs = 300) {
             });
         }, fadeMs);
 
-        // 次の行へ（テキスト切り替えと fade の両方を考慮して interval を調整）
-        sceneCaptionTimer = setTimeout(showNextLine, intervalMs);
+        const thisInterval = intervals[currentCaptionIndex] ?? defaultInterval;
+        sceneCaptionTimer = setTimeout(showNextLine, thisInterval);
     }
 
-    // interval 後に 2行目へ
-    sceneCaptionTimer = setTimeout(showNextLine, intervalMs);
+    const firstInterval = intervals[0] ?? defaultInterval;
+    sceneCaptionTimer = setTimeout(showNextLine, firstInterval);
 }
 
 
