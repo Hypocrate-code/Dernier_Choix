@@ -3,9 +3,16 @@
     --glow-color: rgb(249, 255, 216);
     --glow: drop-shadow(0 0 .3em var(--glow-color));
     --bg-color: #392440;
-    --primary-color: #FF82A9;
+    --cream: #F8F2ED;
+    --beige: #ECDACA;
+    --light-brown: #C9AB96;
+    --brown: #9F7665;
+    --dark-brown: #4C3429;
+    --dark-dark-brown: #231F1F;
     --secondary-color: #7F95D1;
     --transition-duration: .5s;
+    --sans-serif-font: "Cabin", sans-serif;
+    --serif-font: "Alice", serif;
 }
 *,
 *::after,
@@ -15,11 +22,14 @@
     box-sizing: border-box;
 }
 
+button { font-family: var(--sans-serif-font); }
+
 * {
     -webkit-tap-highlight-color: transparent;
 }
 
 html {
+    background: #2b2939;
     animation: bg-intro 50s linear paused forwards;
     transition: background-color var(--transition-duration) ease;
 }
@@ -35,48 +45,60 @@ body {
 
 .title-screen {
     font-size: .9rem;
+    z-index: 9999;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    opacity: 1;
     transition: opacity var(--transition-duration) ease;
 }
 .title-screen.disappear {
     opacity: 0;
 }
 
-.title-screen h1 {
-    color: var(--primary-color);
-    text-align: center;
-    font-size: 4em;
-    letter-spacing: -1%;
-    font-weight: 670;
-    text-shadow: 0 0 .4em rgba(206, 127, 248, 0.444);
-    margin-block: .5em;
-}
-.title-screen * {
+.title-screen > * {
     display: block;
-    font-family: "Rubik";
+    font-family: var(--sans-serif-font);
+}
+.title-screen dotlottie-wc {
+    --ratio: calc(741 / 1114);
+    --width: 39em;
+    width: var(--width);
+    height: calc(var(--width) * var(--ratio));
 }
 .title-screen button {
-    background: var(--primary-color);
-    color: #4b2f50;
-    font-weight: 480;
+    background: var(--beige);
+    color: var(--brown);
+    border: .1em solid var(--light-brown);
+    font-weight: 500;
     margin-block: .4em;
-    text-shadow: 0 0 1em whitesmoke;
     cursor: pointer;
-    border-radius: .35em;
+    border-radius: 5em;
     appearance: none;
     border: none;
-    padding: .45em .6em;
-    font-size: 1.5em;
-    transition: box-shadow .3s ease, color .3s ease;
-    box-shadow: 0 0 .4em .1em rgba(206, 127, 248, 0.3);
+    padding: .55em 2.5em;
+    font-size: 1.6em;
+    margin-top: 1em;
+    --outline: var(--light-brown);
+    transition: outline-width .1s ease-out;
+    outline: 0em solid var(--outline);
+}
+.options {
+    display: flex;
+    margin-top: 5em;
+    gap: 1.5em;
+    font-size: .8em;
+}
+.options>button {
+    --outline: var(--brown);
+    padding-inline: 3.1em;
+    padding-bottom: .57em;
+    background: var(--cream);
+    color: var(--brown);
+    /* font-size: ; */
 }
 .title-screen button:hover {
-    color: rgba(254, 212, 255, .9);
-    box-shadow: 0 0 .4em .2em rgba(206, 127, 248, 0.344);
+    outline-width: .1em;
 }
 
 .scene-container {
@@ -87,7 +109,7 @@ body {
     font-size: var(--font-size);
     width: var(--width);
     height: var(--height);
-    position: relative;
+    position: fixed;
     background-image: url("assets/scenes/scene-sans-objet.svg");
     background-repeat: no-repeat;
     background-size: contain;
@@ -100,11 +122,14 @@ body {
 .intro {
     --duration: 3s;
     --delay: 10s;
+    /* --duration: 1s;
+    --delay: 3s; */
     position: absolute;
     inset: 0;
     z-index: 2000;
-    animation-play-state: paused;
     animation: disappear var(--duration) linear forwards;
+    animation-play-state: paused;
+    background-repeat: no-repeat;
 }
 
 @keyframes bg-intro {
@@ -135,6 +160,7 @@ body {
 }
 
 .intro:nth-child(1) {
+    --duration: 3s;
     animation-delay: calc(var(--delay) * 3 + var(--duration) * 2);
     background-image: url("./assets/scenes/intro/3.svg");
 }
@@ -197,44 +223,44 @@ body {
 }
 
 #Calque-collier-chien {
-    --size: 2em;
-    left: 17.5em;
-    top: 12.8em;
+    --size: 2.05em;
+    left: 17.4em;
+    top: 13em;
 }
 #Calque-music-box {
-    --size: 4em;
-    right: 15.5em;
-    top: 9em;
+    --size: 4.1em;
+    right: 14.9em;
+    top: 8.9em;
 }
 #Calque-caillou {
-    --size: 2em;
+    --size: 2.12em;
     z-index: 20;
-    right: 18.2em;
-    bottom: 19.65em;
+    right: 18.18em;
+    bottom: 19.35em;
 }
 #Calque-dessin {
-    --size: 7.4em;
-    right: 25.2em;
-    top: 9.1em;
+    --size: 7.8em;
+    right: 24.7em;
+    top: 8.85em;
 }
 #Calque-maneki {
-    --size: 4em;
-    left: 5.5em;
+    --size: 4.2em;
+    left: 5.4em;
     top: 17.7em;
 }
 #Calque-fauteuil {
-    --size: 15.3em;
+    --size: 15em;
     right: 2.8em;
-    bottom: 4.5em;
+    bottom: 5em;
 }
 #Calque-sweat {
-    --size: 4.7em;
-    left: 46.3%;
-    bottom: 16.3em;
+    --size: 5em;
+    left: 47.5%;
+    bottom: 15.58em;
 }
 #Calque-ticket {
-    --size: 2.7em;
-    right: 24em;
+    --size: 2.5em;
+    right: 23.1em;
     bottom: 6.4em;
 }
 
@@ -323,7 +349,6 @@ body {
     font-size: 1em;
     line-height: 1.5;
     text-align: left;
-    font-family: Geologica, sans-serif;
 
     opacity: 0;
     transform: translate(-50%, 50%); /* 少し下から浮いてくる */

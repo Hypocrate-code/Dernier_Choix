@@ -2,15 +2,10 @@ const startBtn = document.querySelector("#start");
 const creditsBtn = document.querySelector("#credits");
 const titleSection = document.querySelector(".title-screen")
 
-console.log(startBtn);
-console.log(creditsBtn);
-
 const intros = document.querySelectorAll(".intro");
 const objects = document.querySelectorAll(".hoverable-object");
 const sceneContainer = document.querySelector(".scene-container");
 const cartons = document.querySelectorAll("#carton");
-
-
 
 const overlay = document.getElementById("scene-overlay");
 const scenePhoto = document.getElementById("scene-photo");
@@ -51,9 +46,9 @@ const SOUND_EFFECTS_SRC = {
     "ticket" : ""
 }
 
+intros.forEach(intro => intro.addEventListener('animationend', () => {intro.style.display = "none"}, {once: true}))
 
 startBtn.addEventListener("click", () => {
-    
     titleSection.classList.add("disappear");
     titleSection.addEventListener("transitionend", ()=> {
         const audioIntro = new Audio("./audios/intro.mp3");
@@ -64,7 +59,6 @@ startBtn.addEventListener("click", () => {
         intros.forEach(intro => intro.style.animationPlayState = "running");
         document.documentElement.style.animationPlayState = "running";
         titleSection.style.display = "none";
-        sceneContainer.classList.add('visible');
         sceneContainer.style.display = "block";
     }, {once: true})
 })
@@ -74,14 +68,10 @@ startBtn.addEventListener("click", () => {
 
 objects.forEach(object => {
     object.addEventListener("click", () => {
-
         if (activeObject !== null) { return; }        
-        
         activeObject = object;
-
         scenePhoto.src = object.dataset.scene;
         const audio = new Audio(AUDIOS_SRC[activeObject.parentElement.dataset.name]);
-
         fadeOverlayTo(1,800, () => {
             overlay.classList.remove("hidden");
             audio.play();
@@ -90,7 +80,6 @@ objects.forEach(object => {
                 stopSceneCaption();
                 overlay.classList.add("hidden");
                 scenePhoto.src = "";
-
                 fadeOverlayTo(0, 800, () => {
                     startBoxSelection(activeObject);
                 });
