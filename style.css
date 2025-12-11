@@ -504,12 +504,12 @@ body {
 }
 
 #Calque-arm-chair {
-    --size: 16em;
     position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
     right: 21.5em;
     bottom: 9.4em;
-    transform: rotate(-90deg);
-    transition: transform 1s ease-out;
 }
 
 @keyframes chairAppearRotate {
@@ -519,6 +519,12 @@ body {
     to {
         transform: rotate(0deg);
     }
+}
+
+#arm-chair {
+    --size: 16em;
+    transform: rotate(-90deg);
+    transform-origin: center; /* 好きな軸に調整 */
 }
 
 .arm-chair-rotate-in {

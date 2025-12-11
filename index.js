@@ -25,6 +25,7 @@ const sew = document.getElementById("Calque-sew");
 const scissors = document.getElementById("Calque-scissors");
 const sewingMachine = document.getElementById("Calque-sewing-machine");
 const armChair = document.getElementById("Calque-arm-chair");
+const armChairInner = document.getElementById("arm-chair");
 
 // audio in memory scenes
 const scissorsSound = new Audio("./audios/meuble/sound-effects/ciseaux-tissu.mp3")
@@ -178,6 +179,13 @@ sewingMachine.addEventListener("mouseenter", () => {
 sewingMachine.addEventListener("mouseleave", () => {
     machineSound.pause();
     machineSound.currentTime = 0; // 離れたら止めるなら
+});
+
+armChair.addEventListener("click", () => {
+    console.log("ArmChair clicked");
+    armChairInner.classList.remove("arm-chair-rotate-in");
+    void armChairInner.offsetWidth; // ←リフローでアニメーションをリセット
+    armChairInner.classList.add("arm-chair-rotate-in");
 });
 
 
@@ -415,9 +423,6 @@ function openMemoryScene(sceneId, object){
         sewingMachine.classList.remove("hidden");
         scissors.classList.remove("hidden");
         armChair.classList.remove("hidden");
-        armChair.classList.remove("arm-chair-rotate-in");
-        void armChair.offsetWidth; // ←リフローでアニメーションをリセット
-        armChair.classList.add("arm-chair-rotate-in");
 
     }
 }
