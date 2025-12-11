@@ -331,7 +331,7 @@ body {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .scene-caption {
@@ -474,6 +474,86 @@ body {
     0%   { transform: rotate(-6deg); }
     50%  { transform: rotate(6deg); }
     100% { transform: rotate(-6deg); }
+}
+
+#Calque-lamp2 {
+    --size: 17em;
+    position: absolute;
+    right: 5.5em;
+    bottom: 14.4em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-scissors {
+    --size: 6em;
+    position: absolute;
+    right: 18.5em;
+    bottom: 5.4em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-sew {
+    --size: 5em;
+    position: absolute;
+    right: 10.5em;
+    bottom: 6.4em;
+}
+
+#Calque-arm-chair {
+    --size: 16em;
+    position: absolute;
+    right: 21.5em;
+    bottom: 9.4em;
+    transform: rotate(-90deg);
+    transition: transform 1s ease-out;
+}
+
+@keyframes chairAppearRotate {
+    from {
+        transform: rotate(-90deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+.arm-chair-rotate-in {
+    animation: chairAppearRotate 0.8s ease-out forwards;
+}
+
+@keyframes scissorCut {
+    0%   { transform: rotate(0deg); }
+    50%  { transform: rotate(-12deg); }
+    100% { transform: rotate(0deg); }
+}
+
+#Calque-scissors:hover {
+    animation: scissorCut 1.0s ease-in-out infinite;
+    transform-origin: center bottom; /* 回転の軸を調整 */
+}
+
+#Calque-sewing-machine {
+    --size: 10em;
+    position: absolute;
+    right: 39.5em;
+    bottom: 10.4em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-sewing-machine:hover {
+    animation: sewingShake 0.2s ease-in-out infinite;
+}
+
+@keyframes sewingShake {
+    0%   { transform: translateY(0px); }
+    50%  { transform: translateY(-4px); }
+    100% { transform: translateY(0px); }
 }
 
 #Calque-lamp {

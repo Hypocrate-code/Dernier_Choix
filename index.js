@@ -14,10 +14,21 @@ const memoryScene = document.getElementById("memory-scene");
 const scenePhoto = document.getElementById("scene-photo");
 const fadeOverlay = document.getElementById("fade-overlay");
 const sceneCaption = document.getElementById("scene-caption");
+
+
+// object in memory scenes
 const lamp = document.getElementById("Calque-lamp");
 const horloge = document.getElementById("Calque-horloge");
 const pendule = document.getElementById("Calque-pendule");
+const lamp2 = document.getElementById("Calque-lamp2");
+const sew = document.getElementById("Calque-sew");
+const scissors = document.getElementById("Calque-scissors");
+const sewingMachine = document.getElementById("Calque-sewing-machine");
+const armChair = document.getElementById("Calque-arm-chair");
 
+// audio in memory scenes
+const scissorsSound = new Audio("./audios/meuble/sound-effects/ciseaux-tissu.mp3")
+const machineSound = new Audio("./audios/meuble/sound-effects/machine-a-coudre.mp3")
 const umino = new Audio("./audios/boite-a-musique/sound-effects/uminomieru.mp3")
 
 
@@ -119,6 +130,8 @@ objects.forEach(object => {
     }, {once: true})
 })
 
+//memory scene animation and interaction
+
 let isDark = false; // 今暗いかどうかを記録
 
 lamp.addEventListener("click", () => {
@@ -132,7 +145,40 @@ lamp.addEventListener("click", () => {
     }
 });
 
+lamp2.addEventListener("click", () => {
+    console.log("lamp clicked");
+    if (!isDark) {
+        darkOverlay.classList.remove("hidden"); // 暗くする
+        isDark = true;
+    } else {
+        darkOverlay.classList.add("hidden"); // 明るく戻す
+        isDark = false;
+    }
+});
 
+scissorsSound.preload = "auto";
+
+scissors.addEventListener("mouseenter", () => {
+    scissorsSound.currentTime = 0; // いつでも頭出ししたいなら
+    scissorsSound.play();
+});
+
+scissors.addEventListener("mouseleave", () => {
+    scissorsSound.pause();
+    scissorsSound.currentTime = 0; // 離れたら止めるなら
+});
+
+machineSound.preload = "auto";
+
+sewingMachine.addEventListener("mouseenter", () => {
+    machineSound.currentTime = 0; // いつでも頭出ししたいなら
+    machineSound.play();
+});
+
+sewingMachine.addEventListener("mouseleave", () => {
+    machineSound.pause();
+    machineSound.currentTime = 0; // 離れたら止めるなら
+});
 
 
 
@@ -342,7 +388,18 @@ function stopSceneCaption() {
 
 
 function openMemoryScene(sceneId, object){
+
+    console.log("openMemoryScene called, sceneId =", sceneId);
     memoryScene.classList.add("hidden");
+    lamp.classList.add("hidden");
+    pendule.classList.add("hidden");
+    horloge.classList.add("hidden");
+    sew.classList.add("hidden");
+    lamp2.classList.add("hidden");
+    sewingMachine.classList.add("hidden");
+    scissors.classList.add("hidden");
+    armChair.classList.add("hidden");
+
 
     if(sceneId === "music"){
         umino.volume = 0.8;
@@ -351,9 +408,16 @@ function openMemoryScene(sceneId, object){
         lamp.classList.remove("hidden");
         pendule.classList.remove("hidden");
         horloge.classList.remove("hidden");
-
-    } else {
+    }else if(sceneId === "chair"){
+        memoryScene.classList.remove("hidden");
+        sew.classList.remove("hidden");
+        lamp2.classList.remove("hidden");
+        sewingMachine.classList.remove("hidden");
+        scissors.classList.remove("hidden");
+        armChair.classList.remove("hidden");
+        armChair.classList.remove("arm-chair-rotate-in");
+        void armChair.offsetWidth; // ←リフローでアニメーションをリセット
+        armChair.classList.add("arm-chair-rotate-in");
 
     }
-
 }
