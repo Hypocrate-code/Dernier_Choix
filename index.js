@@ -6,11 +6,20 @@ const intros = document.querySelectorAll(".intro");
 const objects = document.querySelectorAll(".hoverable-object");
 const sceneContainer = document.querySelector(".scene-container");
 const cartons = document.querySelectorAll("#carton");
+const darkOverlay = document.querySelector(".memory-dark-overlay");
+
 
 const overlay = document.getElementById("scene-overlay");
+const memoryScene = document.getElementById("memory-scene");
 const scenePhoto = document.getElementById("scene-photo");
 const fadeOverlay = document.getElementById("fade-overlay");
 const sceneCaption = document.getElementById("scene-caption");
+const lamp = document.getElementById("Calque-lamp");
+const horloge = document.getElementById("Calque-horloge");
+const pendule = document.getElementById("Calque-pendule");
+
+const umino = new Audio("./audios/boite-a-musique/sound-effects/uminomieru.mp3")
+
 
 
 
@@ -57,7 +66,7 @@ const startObject = {
 intros.forEach(intro => intro.addEventListener('animationend', () => {intro.style.display = "none"}, {once: true}))
 
 startBtn.addEventListener("click", () => {
-    titleSection.classList.add("disappear");
+
     titleSection.addEventListener("transitionend", ()=> {
         const audioIntro = new Audio("./audios/intro.mp3");
         audioIntro.addEventListener("play", () => {
@@ -82,26 +91,46 @@ objects.forEach(object => {
     object.addEventListener("click", () => {
         if (activeObject !== null) { return; }        
         activeObject = object;
+        const sceneId = object.dataset.sceneId || "static";
         scenePhoto.src = object.dataset.scene;
         const audio = new Audio(AUDIOS_SRC[activeObject.parentElement.dataset.name]);
+
+
         fadeOverlayTo(1,800, () => {
             overlay.classList.remove("hidden");
+
+            openMemoryScene(sceneId, activeObject);
+
             audio.play();
             startSceneCaption(activeObject);
-            audio.addEventListener("ended", () => {
+
+            scenePhoto.addEventListener("click", () => {
                 stopSceneCaption();
                 overlay.classList.add("hidden");
                 scenePhoto.src = "";
                 fadeOverlayTo(0, 800, () => {
                     startBoxSelection(activeObject);
                 });
-
             }, { once: true });
+
         });
        
 
     }, {once: true})
 })
+
+let isDark = false; // 今暗いかどうかを記録
+
+lamp.addEventListener("click", () => {
+    console.log("lamp clicked");
+    if (!isDark) {
+        darkOverlay.classList.remove("hidden"); // 暗くする
+        isDark = true;
+    } else {
+        darkOverlay.classList.add("hidden"); // 明るく戻す
+        isDark = false;
+    }
+});
 
 
 
@@ -181,6 +210,8 @@ function handleMouseUp(e) {
             if (carton.contains(elemUnder) || carton === elemUnder) {
                 // If "keep" cupboard -> objects added to keepObjects, otherwise added to thrownObjects global list
                 carton.parentElement.classList.contains("keep") ? keptObjects.push(activeObject) : thrownObjects.push(activeObject);
+                
+                umino.pause();
                 // Making the object disappear
                 activeObject.classList.remove("object-selected");
                 activeObject.classList.add("done");
@@ -307,4 +338,22 @@ function stopSceneCaption() {
         currentCaptionLines = [];
         currentCaptionIndex = 0;
     }, 200); 
+}
+
+
+function openMemoryScene(sceneId, object){
+    memoryScene.classList.add("hidden");
+
+    if(sceneId === "music"){
+        umino.volume = 0.8;
+        umino.play();
+        memoryScene.classList.remove("hidden");
+        lamp.classList.remove("hidden");
+        pendule.classList.remove("hidden");
+        horloge.classList.remove("hidden");
+
+    } else {
+
+    }
+
 }

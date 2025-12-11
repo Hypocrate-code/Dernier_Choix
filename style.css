@@ -266,6 +266,8 @@ body {
 
 
 
+
+
 /* Cartons */
 .Calque-carton {
     --size: 11em !important;
@@ -381,6 +383,31 @@ body {
   pointer-events: auto;    
 }
 
+.memory-scene.hidden{
+    display: none;
+}
+
+#scene-photo.hidden{
+    display: none;
+}
+
+.memory-scene {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+
+.dummy-box {
+  width: 200px;
+  height: 200px;
+  background: black;
+  margin: auto;            /* 中央寄せしたいなら */
+  position: absolute;      
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 完全中央配置 */
+}
 
 
 @media screen and (max-width: 1044px) {
@@ -402,3 +429,70 @@ body {
         --font-size: 1.67vw;
     }
 }
+
+.memory-container {
+    --height: 100vh;
+    --ratio: calc(1352 / 845);
+    --width: calc(var(--height) * var(--ratio));
+    --font-size: calc(var(--height) * .0268);
+    font-size: var(--font-size);
+    width: var(--width);
+    height: var(--height);
+    position: fixed;
+    opacity: 1;
+    pointer-events: none;
+}
+
+.memory-container svg {
+    --size: 5em;
+    display: block;
+    width: var(--size);
+    height: var(--size);
+    overflow: visible;
+}
+
+#Calque-horloge {
+    --size: 23em;
+    position: absolute;
+    right: 1.5em;
+    bottom: 5.4em;
+}
+
+#Calque-pendule {
+    --size: 10em;
+    position: absolute;
+    right: 8.1em;
+    bottom: 8.4em;
+
+    /* 振り子アニメーション */
+    transform-origin: 50% 0%;     /* 上端中央を支点にする */
+    transform-box: fill-box;      /* SVGの描画範囲基準にするのがポイント */
+    animation: pendulum-swing 1.6s ease-in-out infinite;
+}
+
+@keyframes pendulum-swing {
+    0%   { transform: rotate(-6deg); }
+    50%  { transform: rotate(6deg); }
+    100% { transform: rotate(-6deg); }
+}
+
+#Calque-lamp {
+    --size: 19em;
+    position: absolute;
+    right: 32.5em;
+    bottom: 2.4em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+.memory-dark-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    opacity: 0.95;
+    pointer-events: none; /* クリックは下に通す */
+    transition: opacity 0.4s ease;
+    z-index: 5500; /* メモリーシーンより上にする */
+}
+
