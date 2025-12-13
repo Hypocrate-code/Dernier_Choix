@@ -14,6 +14,8 @@ const memoryScene = document.getElementById("memory-scene");
 const scenePhoto = document.getElementById("scene-photo");
 const fadeOverlay = document.getElementById("fade-overlay");
 const sceneCaption = document.getElementById("scene-caption");
+const boundary = document.getElementById("drag-boundary");
+const draggables = boundary.querySelectorAll(".draggable");
 
 
 // object in memory scenes
@@ -26,11 +28,16 @@ const scissors = document.getElementById("Calque-scissors");
 const sewingMachine = document.getElementById("Calque-sewing-machine");
 const armChair = document.getElementById("Calque-arm-chair");
 const armChairInner = document.getElementById("arm-chair");
+const easterEgg = document.getElementById("Calque-easter-egg");
+const magnetFlower = document.getElementById("Calque-magnet-flower");
+const polaroid1 = document.getElementById("Calque-polaroid1");
+const polaroid2 = document.getElementById("Calque-polaroid2");
 
 // audio in memory scenes
-const scissorsSound = new Audio("./audios/meuble/sound-effects/ciseaux-tissu.mp3")
-const machineSound = new Audio("./audios/meuble/sound-effects/machine-a-coudre.mp3")
-const umino = new Audio("./audios/boite-a-musique/sound-effects/uminomieru.mp3")
+const scissorsSound = new Audio("./audios/meuble/sound-effects/ciseaux-tissu.mp3");
+const machineSound = new Audio("./audios/meuble/sound-effects/machine-a-coudre.mp3");
+const umino = new Audio("./audios/boite-a-musique/sound-effects/uminomieru.mp3");
+const dessinSound = new Audio("./audios/dessin/sound-effects/papier-qui-bouge.mp3");
 
 
 
@@ -118,6 +125,7 @@ objects.forEach(object => {
 
             scenePhoto.addEventListener("click", () => {
                 stopSceneCaption();
+                dessinSound.pause();
                 overlay.classList.add("hidden");
                 scenePhoto.src = "";
                 fadeOverlayTo(0, 800, () => {
@@ -188,6 +196,41 @@ armChair.addEventListener("click", () => {
     armChairInner.classList.add("arm-chair-rotate-in");
 });
 
+draggables.forEach(el => {
+    el.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        el.classList.add("dragging");
+
+        const b = boundary.getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+
+        const offsetX = e.clientX - r.left;
+        const offsetY = e.clientY - r.top;
+
+        function move(ev) {
+            const maxLeft = b.width  - r.width;
+            const maxTop  = b.height - r.height;
+
+            let left = ev.clientX - b.left - offsetX;
+            let top  = ev.clientY - b.top  - offsetY;
+
+            left = Math.max(0, Math.min(maxLeft, left));
+            top  = Math.max(0, Math.min(maxTop, top));
+
+            el.style.left = `${left}px`;
+            el.style.top  = `${top}px`;
+        }
+
+        function up() {
+            el.classList.remove("dragging");
+            window.removeEventListener("mousemove", move);
+            window.removeEventListener("mouseup", up);
+        }
+
+        window.addEventListener("mousemove", move);
+        window.addEventListener("mouseup", up);
+    });
+});
 
 
 function startBoxSelection(object) {
@@ -407,6 +450,10 @@ function openMemoryScene(sceneId, object){
     sewingMachine.classList.add("hidden");
     scissors.classList.add("hidden");
     armChair.classList.add("hidden");
+    easterEgg.classList.add("hidden");
+    magnetFlower.classList.add("hidden");
+    polaroid1.classList.add("hidden");
+    polaroid2.classList.add("hidden");
 
 
     if(sceneId === "music"){
@@ -423,6 +470,14 @@ function openMemoryScene(sceneId, object){
         sewingMachine.classList.remove("hidden");
         scissors.classList.remove("hidden");
         armChair.classList.remove("hidden");
+    }else if(sceneId === "dessin"){
+        memoryScene.classList.remove("hidden");
+        dessinSound.volume = 0.6;
+        dessinSound.play();
+        easterEgg.classList.remove("hidden");
+        magnetFlower.classList.remove("hidden");
+        polaroid1.classList.remove("hidden");
+        polaroid2.classList.remove("hidden");
 
     }
 }

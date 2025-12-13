@@ -2,6 +2,8 @@
 :root {
     --glow-color: rgb(249, 255, 216);
     --glow: drop-shadow(0 0 .3em var(--glow-color));
+    --grab-color: rgb(255, 149, 149);
+    --grab: drop-shadow(0 0 .3em var(--grab-color));
     --bg-color: #392440;
     --cream: #F8F2ED;
     --beige: #ECDACA;
@@ -184,6 +186,18 @@ body {
 .scene-container.fade-out {
     opacity: 0;
 }
+
+.grabble-object {
+    cursor: pointer;
+    transition: filter 0.27s ease;
+    transform-origin: center;
+    animation: wiggle 420ms steps(6, end) .27s;
+}
+
+.grabble-object:hover {
+    filter: var(--grab);
+}
+
 
 .hoverable-object {
     cursor: pointer;
@@ -580,5 +594,66 @@ body {
     pointer-events: none; /* クリックは下に通す */
     transition: opacity 0.4s ease;
     z-index: 5500; /* メモリーシーンより上にする */
+}
+
+#Calque-easter-egg {
+    --size: 4em;
+    position: absolute;
+    left: 9em;
+    top: 2em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-magnet-flower {
+    --size: 4em;
+    position: absolute;
+    left: 4em;
+    top: 6em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-polaroid1 {
+    --size: 5em;
+    position: absolute;
+    left: 9em;
+    top: 14em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-polaroid2 {
+    --size: 5em;
+    position: absolute;
+    left: 3em;
+    top: 19em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+.draggable {
+    position: absolute;
+    pointer-events: auto;
+    cursor: grab;
+    z-index: 4500;
+    user-select: none;
+}
+
+.draggable.dragging {
+    cursor: grabbing;
+}
+
+#drag-boundary {
+    position: absolute;
+    left: 36em;
+    top: 5em;
+    width: 15em;
+    height: 27em;
+    pointer-events: auto;
 }
 
