@@ -657,3 +657,23 @@ body {
     pointer-events: auto;
 }
 
+
+#carton-lottie-overlay{
+  position: fixed;           /* getBoundingClientRect()と相性良い */
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  display: none;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: visible;  
+}
+
+/* lottie svgを箱いっぱいにフィットさせる */
+#carton-lottie-overlay svg{
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;  
+}
