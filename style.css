@@ -754,7 +754,9 @@ body {
 }
 
 #Calque-collier-souvenir {
+
     z-index: 9999;
+    cursor: pointer;
     max-width: 70vw;
     max-height: 70vh;
     width: auto;

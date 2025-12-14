@@ -246,7 +246,7 @@ objects.forEach(object => {
         if (activeObject !== null) { return; }
         activeObject = object;
         const sceneId = object.parentElement.dataset.name || "static";
-        scenePhoto.src = object.dataset.scene;
+        // scenePhoto.src = object.dataset.scene;
         const audio = new Audio(AUDIOS_SRC[activeObject.parentElement.dataset.name]);
 
         // Arrêter les animations et sons des cartons en cours
