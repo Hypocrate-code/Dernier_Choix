@@ -45,6 +45,21 @@ let cartonLottieAnim = null;
 let cartonSound = null;
 let soundTimeout = null;
 
+// === ending ===
+const endingOverlay = document.getElementById("ending-overlay");
+let endingAnim = null;
+let endingReadyToExit = false;
+let endingSound = null;
+let drivingLoop = null;      
+
+const ENDING_AUDIO = {
+  default: "assets/ending/sound/fin-defaut.mp3",
+  enfant:  "assets/ending/sound/fin-enfant.mp3",
+  ex:      "assets/ending/sound/fin-ex.mp3",
+  rien:    "assets/ending/sound/fin-garde-rien.mp3",
+  tout:    "assets/ending/sound/fin-garde-tout.mp3",
+  ticket:  "assets/ending/sound/fin-ticket.mp3",
+};
 
 let activeObject = null;
 let currentObject = null;
@@ -100,6 +115,15 @@ const CARTON_LOTTIE = {
         "ticket": "assets/objets/cartons/Garder-ticket-de-caisse/ticket-garder.json",
     },
 };
+
+const ENDING_LOTTIE = {
+        "default": "assets/ending/default.json",
+        "enfant": "assets/ending/enfant.json",
+        "ex": "assets/ending/ex.json",
+        "rien": "assets/ending/rien.json",
+        "ticket": "assets/ending/ticket.json",
+        "tout": "assets/ending/tout-.json",
+}
 
 const CARTON_SOUNDS = {
     throw: {
@@ -671,5 +695,110 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
             cartonSound.currentTime = 0;
             cartonSound = null;
         }
+
+        const TOTAL_OBJECTS = 8;
+        if (keptObjects.length + thrownObjects.length >= TOTAL_OBJECTS) {
+        playEnding();
+        }
     });
+}
+
+function decideEndingKey() {
+  const keptKeys = keptObjects
+    .map(o => o.parentElement?.dataset?.name)
+    .filter(Boolean);
+
+  const thrownKeys = thrownObjects
+    .map(o => o.parentElement?.dataset?.name)
+    .filter(Boolean);
+
+  const keptSet = new Set(keptKeys);
+  const thrownSet = new Set(thrownKeys);
+
+  // 全部keep
+  if (keptKeys.length === 8) return "tout";
+
+  // 全部throw
+  if (thrownKeys.length === 8) return "rien";
+
+  // ticketをthrowした
+  if (thrownSet.has("ticket")) return "ticket";
+
+  // enfant系
+  if (keptSet.has("dessin") || keptSet.has("collier")) return "enfant";
+
+  // ex系
+  if (keptSet.has("pull") || keptSet.has("maneki")) return "ex";
+
+  return "default";
+}
+
+function playEnding() {
+  if (!endingOverlay || !window.lottie) return;
+
+  const key = decideEndingKey();
+  const src = ENDING_LOTTIE[key] || ENDING_LOTTIE.default;
+  const audioSrc = ENDING_AUDIO[key] || ENDING_AUDIO.default;
+
+  // 画面をエンディングモードに（操作止める）
+  endingReadyToExit = false;
+  endingOverlay.classList.remove("hidden");
+  endingOverlay.classList.add("visible");
+  endingOverlay.style.pointerEvents = "none";
+  sceneContainer.style.pointerEvents = "none";
+
+  // 前のendingを掃除
+  if (endingAnim) {
+    endingAnim.destroy();
+    endingAnim = null;
+  }
+  endingOverlay.innerHTML = "";
+
+  // 既存音を停止
+  if (endingSound) {
+    endingSound.pause();
+    endingSound.currentTime = 0;
+    endingSound = null;
+  }
+  if (drivingLoop) {
+    drivingLoop.pause();
+    drivingLoop.currentTime = 0;
+    drivingLoop = null;
+  }
+
+  // ★ticket以外なら driving-loop をループ再生
+  if (key !== "ticket") {
+    drivingLoop = new Audio("assets/ending/sound/driving-loop.mp3"); // パスは適宜
+    drivingLoop.loop = true;
+    drivingLoop.volume = 1.0; // 好みで（エンディング音とぶつかるなら下げる）
+    drivingLoop.play().catch(err => console.warn("Driving loop blocked:", err));
+  }
+
+  // エンディング固有音を再生
+  if (audioSrc) {
+    endingSound = new Audio(audioSrc);
+    endingSound.volume = 1.0;
+    endingSound.play().catch(err => console.warn("Ending audio blocked:", err));
+  }
+
+  // Lottie再生
+  endingAnim = lottie.loadAnimation({
+    container: endingOverlay,
+    renderer: "svg",
+    loop: false,
+    autoplay: true,
+    path: src
+  });
+
+  endingAnim.addEventListener("complete", () => {
+    endingReadyToExit = true;
+
+    // アニメ後：クリックでタイトルへ戻れるようにする
+    endingOverlay.style.pointerEvents = "auto";
+    endingOverlay.addEventListener("click", returnToTitle, { once: true });
+  });
+}
+function returnToTitle() {
+  // エンディング片付け
+    window.location.reload();
 }
