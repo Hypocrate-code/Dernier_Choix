@@ -42,6 +42,8 @@ const umino = new Audio("./audios/boite-a-musique/sound-effects/uminomieru.mp3")
 // animation cartons
 const cartonLottieOverlay = document.getElementById("carton-lottie-overlay");
 let cartonLottieAnim = null;
+let cartonSound = null;
+let soundTimeout = null;
 
 
 let activeObject = null;
@@ -55,48 +57,95 @@ let currentCaptionIndex = 0;
 let currentCaptionLines = [];
 
 const AUDIOS_SRC = {
-    "music-box" : "audios/boite-a-musique/audio.mp3",
+    "music-box": "audios/boite-a-musique/audio.mp3",
     "caillou": "audios/caillou/audio.mp3",
-    "collier" : "audios/collier/audio.mp3",
-    "dessin" : "audios/dessin/audio.mp3",
-    "maneki" : "audios/maneki/audio.mp3",
-    "fauteuil" : "audios/meuble/audio.mp3",
-    "pull" : "audios/pull/audio.mp3",
-    "ticket" : "audios/ticket/audio.mp3"
+    "collier": "audios/collier/audio.mp3",
+    "dessin": "audios/dessin/audio.mp3",
+    "maneki": "audios/maneki/audio.mp3",
+    "fauteuil": "audios/meuble/audio.mp3",
+    "pull": "audios/pull/audio.mp3",
+    "ticket": "audios/ticket/audio.mp3"
 }
 
 const SOUND_EFFECTS_SRC = {
-    "music-box" : "",
+    "music-box": "",
     "caillou": "",
-    "collier" : "",
-    "dessin" : "",
-    "maneki" : "",
-    "fauteuil" : "",
-    "pull" : "",
-    "ticket" : ""
+    "collier": "",
+    "dessin": "",
+    "maneki": "",
+    "fauteuil": "",
+    "pull": "",
+    "ticket": ""
 }
 
 const CARTON_LOTTIE = {
-  keep: {
-    "music-box":  "assets/objets/cartons/musique-donner/musique-donner.json",
-    "caillou":    "assets/objets/cartons/caillou-donner/caillou-donner.json",
-    "collier":    "assets/objets/cartons/Donner-collier/collier-donner.json",
-    "dessin":     "assets/objets/cartons/Jeter-dessin/dessin-donner.json",
-    "maneki":     "assets/objets/cartons/maneki-donner/maneki-donner.json",
-    "fauteuil":   "assets/objets/cartons/fauteuil-donner/fauteuil-donner.json",
-    "pull":       "assets/objets/cartons/sweat-donner/sweat-donner.json",
-    "ticket":     "assets/objets/cartons/Jeter-ticket-de-caisse/ticket-donner.json",
-  },
-  throw: {
-    "music-box":  "assets/objets/cartons/musique-garder/musique-garder.json",
-    "caillou":    "assets/objets/cartons/caillou-garder/caillou-garder.json",
-    "collier":    "assets/objets/cartons/Garder-collier-chien/collier-garder.json",
-    "dessin":     "assets/objets/cartons/Garder-dessin/dessin-garder.json",
-    "maneki":     "assets/objets/cartons/maneki-garder/maneki-garder.json",
-    "fauteuil":   "assets/objets/cartons/fauteuil-garder/fauteuil-garder.json",
-    "pull":       "assets/objets/cartons/sweat-garder/sweat-garder.json",
-    "ticket":     "assets/objets/cartons/Garder-ticket-de-caisse/ticket-garder.json",
-  },
+    throw: {
+        "music-box": "assets/objets/cartons/musique-donner/musique-donner.json",
+        "caillou": "assets/objets/cartons/caillou-donner/caillou-donner.json",
+        "collier": "assets/objets/cartons/Donner-collier/collier-donner.json",
+        "dessin": "assets/objets/cartons/Jeter-dessin/dessin-donner.json",
+        "maneki": "assets/objets/cartons/maneki-donner/maneki-donner.json",
+        "fauteuil": "assets/objets/cartons/fauteuil-donner/fauteuil-donner.json",
+        "pull": "assets/objets/cartons/sweat-donner/sweat-donner.json",
+        "ticket": "assets/objets/cartons/Jeter-ticket-de-caisse/ticket-donner.json",
+    },
+    keep: {
+        "music-box": "assets/objets/cartons/musique-garder/musique-garder.json",
+        "caillou": "assets/objets/cartons/caillou-garder/caillou-garder.json",
+        "collier": "assets/objets/cartons/Garder-collier-chien/collier-garder.json",
+        "dessin": "assets/objets/cartons/Garder-dessin/dessin-garder.json",
+        "maneki": "assets/objets/cartons/maneki-garder/maneki-garder.json",
+        "fauteuil": "assets/objets/cartons/fauteuil-garder/fauteuil-garder.json",
+        "pull": "assets/objets/cartons/sweat-garder/sweat-garder.json",
+        "ticket": "assets/objets/cartons/Garder-ticket-de-caisse/ticket-garder.json",
+    },
+};
+
+const CARTON_SOUNDS = {
+    throw: {
+        "music-box": "assets/objets/cartons/musique-donner/piano-slam-lid-move-chair-43789.mp3",
+        "caillou": "assets/objets/cartons/caillou-donner/small-rock-break-194553.mp3",
+        "collier": "assets/objets/cartons/Donner-collier/sound-of-ice-cracking-426894.mp3",
+        "dessin": "assets/objets/cartons/Jeter-dessin/the-sound-of-an-exploding-cracker-with-tinsel-or-confetti.mp3",
+        "maneki": "assets/objets/cartons/maneki-donner/cat-meow-sound-383823.mp3",
+        "fauteuil": "assets/objets/cartons/fauteuil-donner/cartoon-spring-bright-fx_179bpm.wav",
+        "pull": "assets/objets/cartons/sweat-donner/cashier-quotka-chingquot-sound-effect-129698.mp3",
+        "ticket": "assets/objets/cartons/Jeter-ticket-de-caisse/the-impatient-sound-of-a-paper-envelope-tearing.mp3",
+    },
+    keep: {
+        "music-box": "assets/objets/cartons/musique-garder/playing-the-harp-up-the-scale-slowly.mp3",
+        "caillou": "assets/objets/cartons/caillou-garder/rainy-night-ambience-loop-31064.mp3",// Pas de fichier son disponible
+        "collier": "assets/objets/cartons/Garder-collier-chien/dog-sound.mp3",
+        "dessin": "assets/objets/cartons/Garder-dessin/children-giggling-kids-laughing-hd-378111.mp3",
+        "maneki": "assets/objets/cartons/maneki-garder/montbell-bonsho-von-japan-30695.mp3",
+        "fauteuil": "assets/objets/cartons/fauteuil-garder/diamond-found-190255.mp3",
+        "pull": "assets/objets/cartons/sweat-garder/warm-piano-logo-116098.mp3",
+        "ticket": "assets/objets/cartons/Garder-ticket-de-caisse/the-noise-of-a-large-stack-of-papers-falling.mp3",
+    },
+};
+
+// Délais personnalisés pour chaque son
+const CARTON_SOUND_DELAYS = {
+    keep: {
+        "music-box": 1500,
+        "caillou": 1000,
+        "collier": 1500,
+        "dessin": 2000,
+        "maneki": 1500,
+        "fauteuil": 1000,
+        "pull": 500,
+        "ticket": 0,
+    },
+    throw: {
+        "music-box": 500,
+        "caillou": 0,
+        "collier": 500,
+        "dessin": 1500,
+        "maneki": 700,
+        "fauteuil": 1000,
+        "pull": 1500,
+        "ticket": 1900,
+    },
 };
 
 const startObject = {
@@ -107,12 +156,12 @@ const startObject = {
 };
 
 
-intros.forEach(intro => intro.addEventListener('animationend', () => {intro.style.display = "none"}, {once: true}))
+intros.forEach(intro => intro.addEventListener('animationend', () => { intro.style.display = "none" }, { once: true }))
 
 startBtn.addEventListener("click", () => {
     titleSection.classList.add("disappear");
-    
-    titleSection.addEventListener("animationend", ()=> {
+
+    titleSection.addEventListener("animationend", () => {
         const audioIntro = new Audio("./audios/intro.mp3");
         audioIntro.addEventListener("play", () => {
             startSceneCaption(startObject);
@@ -123,20 +172,20 @@ startBtn.addEventListener("click", () => {
         titleSection.style.display = "none";
         sceneContainer.style.display = "block";
         skipBtn.classList.add("visible");
-        skipBtn.addEventListener("click", ()=> {
+        skipBtn.addEventListener("click", () => {
             audioIntro.pause();
             document.documentElement.style.animation = "none";
             document.documentElement.style.backgroundColor = "#f9ecd7";
-            intros.forEach(intro => intro.style.display="none");
+            intros.forEach(intro => intro.style.display = "none");
             skipBtn.classList.remove("visible");
             stopSceneCaption();
-        }, {once: true})
-        audioIntro.addEventListener("ended", ()=> {
+        }, { once: true })
+        audioIntro.addEventListener("ended", () => {
             skipBtn.classList.remove("visible");
             stopSceneCaption();
             skipBtn.removeEventListener("click");
-        }, {once: true})
-    }, {once: true})
+        }, { once: true })
+    }, { once: true })
 })
 
 
@@ -144,14 +193,37 @@ startBtn.addEventListener("click", () => {
 
 objects.forEach(object => {
     object.addEventListener("click", () => {
-        if (activeObject !== null) { return; }        
+        if (activeObject !== null) { return; }
         activeObject = object;
         const sceneId = object.parentElement.dataset.name || "static";
         scenePhoto.src = object.dataset.scene;
         const audio = new Audio(AUDIOS_SRC[activeObject.parentElement.dataset.name]);
 
+        // Arrêter les animations et sons des cartons en cours
+        if (cartonLottieAnim) {
+            cartonLottieAnim.destroy();
+            cartonLottieAnim = null;
+        }
+        if (cartonLottieOverlay) {
+            cartonLottieOverlay.style.display = "none";
+            cartonLottieOverlay.innerHTML = "";
+        }
+        if (soundTimeout) {
+            clearTimeout(soundTimeout);
+            soundTimeout = null;
+        }
+        if (cartonSound) {
+            cartonSound.pause();
+            cartonSound.currentTime = 0;
+            cartonSound = null;
+        }
+        // Réafficher les cartons si cachés
+        cartons.forEach(carton => {
+            carton.classList.remove("hidden");
+        });
 
-        fadeOverlayTo(1,800, () => {
+
+        fadeOverlayTo(1, 800, () => {
             overlay.classList.remove("hidden");
 
             openMemoryScene(sceneId, activeObject);
@@ -161,6 +233,7 @@ objects.forEach(object => {
 
             scenePhoto.addEventListener("click", () => {
                 audio.pause();
+                umino.pause();
                 stopSceneCaption();
                 overlay.classList.add("hidden");
                 scenePhoto.src = "";
@@ -170,9 +243,9 @@ objects.forEach(object => {
             }, { once: true });
 
         });
-       
 
-    }, {once: true})
+
+    }, { once: true })
 })
 
 //memory scene animation and interaction
@@ -244,17 +317,17 @@ draggables.forEach(el => {
         const offsetY = e.clientY - r.top;
 
         function move(ev) {
-            const maxLeft = b.width  - r.width;
-            const maxTop  = b.height - r.height;
+            const maxLeft = b.width - r.width;
+            const maxTop = b.height - r.height;
 
             let left = ev.clientX - b.left - offsetX;
-            let top  = ev.clientY - b.top  - offsetY;
+            let top = ev.clientY - b.top - offsetY;
 
             left = Math.max(0, Math.min(maxLeft, left));
-            top  = Math.max(0, Math.min(maxTop, top));
+            top = Math.max(0, Math.min(maxTop, top));
 
             el.style.left = `${left}px`;
-            el.style.top  = `${top}px`;
+            el.style.top = `${top}px`;
         }
 
         function up() {
@@ -275,19 +348,19 @@ function startBoxSelection(object) {
     // Now the user has to choose whether or not to keep the object.
     activeObject = object;
     activeObject.classList.add("object-selected");
-    
+
     let offsetX = 0;
     let offsetY = 0;
-    
+
     // Showing that other objects are not selectable anymore for now
-    objects.forEach(object=>object.classList.remove("hoverable-object"));
-    
+    objects.forEach(object => object.classList.remove("hoverable-object"));
+
     // Make cupboards appear
     cartons.forEach(carton => {
         carton.parentElement.style.zIndex = 50;
         carton.parentElement.classList.add("active");
     })
-        
+
     activeObject.addEventListener("mousedown", (e) => {
         dragging = true;
         activeObject.style.cursor = "grabbing";
@@ -295,8 +368,8 @@ function startBoxSelection(object) {
         const widthElement = parseFloat(window.getComputedStyle(activeObject.parentElement)["width"].replace("px", ""));
         const heightElement = parseFloat(window.getComputedStyle(activeObject.parentElement)["height"].replace("px", ""));
         // offset of the container to properly place the dragged object onto the mouse on mousemove
-        offsetX = sceneContainer.offsetLeft + (widthElement/2); 
-        offsetY = sceneContainer.offsetTop + (heightElement/2);
+        offsetX = sceneContainer.offsetLeft + (widthElement / 2);
+        offsetY = sceneContainer.offsetTop + (heightElement / 2);
     });
     activeObject.addEventListener("touchstart", (e) => {
         dragging = true;
@@ -305,8 +378,8 @@ function startBoxSelection(object) {
         const widthElement = parseFloat(window.getComputedStyle(activeObject.parentElement)["width"].replace("px", ""));
         const heightElement = parseFloat(window.getComputedStyle(activeObject.parentElement)["height"].replace("px", ""));
         // offset of the container to properly place the dragged object onto the mouse on mousemove
-        offsetX = sceneContainer.offsetLeft + (widthElement/2); 
-        offsetY = sceneContainer.offsetTop + (heightElement/2);
+        offsetX = sceneContainer.offsetLeft + (widthElement / 2);
+        offsetY = sceneContainer.offsetTop + (heightElement / 2);
     });
 
     document.addEventListener("mousemove", (e) => {
@@ -325,7 +398,7 @@ function startBoxSelection(object) {
         activeObject.parentElement.style.left = (x - offsetX) + "px";
         activeObject.parentElement.style.top = (y - offsetY) + "px";
     });
-    
+
     // More complex function, appart from the main code down below
     document.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("touchend", handleMouseUp);
@@ -343,28 +416,27 @@ function handleMouseUp(e) {
         cartons.forEach(carton => {
             // If cupboard is under the mouse, make the element disappear
             if (carton.contains(elemUnder) || carton === elemUnder) {
-                // If "keep" cupboard -> objects added to keepObjects, otherwise added to thrownObjects global list
-                const isKeep = carton.parentElement.classList.contains("keep");
+                // Carton de gauche (classe "keep") = jeter, Carton de droite (classe "throw") = garder
+                const isKeep = carton.parentElement.classList.contains("throw"); // Inversé !
                 const action = isKeep ? "keep" : "throw";
                 const objectKey = activeObject.parentElement.dataset.name; // 8種キー
                 const cartonSvg = carton.closest("svg");
 
-                playCartonLottie({ action, objectKey, cartonSvg});
+                playCartonLottie({ action, objectKey, cartonSvg });
 
                 isKeep ? keptObjects.push(activeObject) : thrownObjects.push(activeObject);
-                carton.parentElement.classList.contains("keep") ? keptObjects.push(activeObject) : thrownObjects.push(activeObject);
-                
+
                 umino.pause();
                 // Making the object disappear
                 activeObject.classList.remove("object-selected");
                 activeObject.classList.add("done");
-                activeObject.addEventListener("animationend", ()=>{
+                activeObject.addEventListener("animationend", () => {
                     // Reseting scene
                     cartons.forEach(carton => {
                         carton.parentElement.classList.remove("active");
-                        carton.parentElement.addEventListener("transitionend", () => carton.parentElement.style.zIndex = -1, { once: true})
+                        carton.parentElement.addEventListener("transitionend", () => carton.parentElement.style.zIndex = -1, { once: true })
                     })
-                    objects.forEach(object=>object.classList.add("hoverable-object"));
+                    objects.forEach(object => object.classList.add("hoverable-object"));
                 })
                 activeObject = null;
                 document.removeEventListener("mouseup", handleMouseUp);
@@ -416,9 +488,9 @@ function startSceneCaption(object, defaultInterval = 3500, fadeMs = 250) {
     if (currentCaptionLines.length === 0) return;
 
     const intervals = (object.dataset.intervals || "")
-    .split(",")
-    .map(s => parseInt(s.trim(), 10))
-    .map(v => (isNaN(v) ? defaultInterval : v)); 
+        .split(",")
+        .map(s => parseInt(s.trim(), 10))
+        .map(v => (isNaN(v) ? defaultInterval : v));
 
     // 他のキャプションが動いていたら停止
     if (sceneCaptionTimer) {
@@ -480,11 +552,11 @@ function stopSceneCaption() {
         sceneCaption.textContent = "";
         currentCaptionLines = [];
         currentCaptionIndex = 0;
-    }, 200); 
+    }, 200);
 }
 
 
-function openMemoryScene(sceneId, object){
+function openMemoryScene(sceneId, object) {
 
     console.log("openMemoryScene called, sceneId =", sceneId);
     memoryScene.classList.add("hidden");
@@ -503,31 +575,31 @@ function openMemoryScene(sceneId, object){
 
     memoryScene.classList.remove("hidden");
 
-    if(sceneId === "music-box"){
+    if (sceneId === "music-box") {
         umino.volume = 0.8;
         umino.play();
         lamp.classList.remove("hidden");
         pendule.classList.remove("hidden");
         horloge.classList.remove("hidden");
-    }else if(sceneId === "fauteuil"){
+    } else if (sceneId === "fauteuil") {
         sew.classList.remove("hidden");
         lamp2.classList.remove("hidden");
         sewingMachine.classList.remove("hidden");
         scissors.classList.remove("hidden");
         armChair.classList.remove("hidden");
-    }else if(sceneId === "dessin"){
+    } else if (sceneId === "dessin") {
         easterEgg.classList.remove("hidden");
         magnetFlower.classList.remove("hidden");
         polaroid1.classList.remove("hidden");
         polaroid2.classList.remove("hidden");
 
-    }else if(sceneId === "collier"){
+    } else if (sceneId === "collier") {
         console.log("collier");
-    }else if(sceneId === "caillou"){
+    } else if (sceneId === "caillou") {
         console.log("caillou");
-    }else if(sceneId === "maneki"){
+    } else if (sceneId === "maneki") {
         console.log("maneki");
-    }else if(sceneId === "pull"){
+    } else if (sceneId === "pull") {
         console.log("pull");
     }
 }
@@ -536,6 +608,7 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
     if (!cartonLottieOverlay || !window.lottie) return;
 
     const src = CARTON_LOTTIE?.[action]?.[objectKey];
+    const soundSrc = CARTON_SOUNDS?.[action]?.[objectKey];
     if (!src) return;
 
     const r = cartonSvg.getBoundingClientRect();
@@ -544,31 +617,59 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
     });
 
     console.log(cartonSvg);
-    
+
+    // Dimensions fixes pour toutes les animations
+    const fixedWidth = 380; // Largeur fixe
+    const fixedHeight = 380 // Hauteur fixe
+    const bottomDistance = 15; // Distance fixe depuis le bas de la fenêtre
+
     cartonLottieOverlay.style.display = "block";
-    cartonLottieOverlay.style.left = r.left + "px";
-    cartonLottieOverlay.style.top  = r.top - 130 + "px";
-    cartonLottieOverlay.style.width  = r.width +30 + "px";
-    cartonLottieOverlay.style.height = r.height +30 + "px";
+    cartonLottieOverlay.style.left = r.left + (r.width / 2) - (fixedWidth / 2) + "px"; // Centré sur le carton
+    cartonLottieOverlay.style.bottom = bottomDistance + "px";
+    cartonLottieOverlay.style.top = "auto"; // Désactiver le positionnement par le haut
+    cartonLottieOverlay.style.width = fixedWidth + "px";
+    cartonLottieOverlay.style.height = fixedHeight + "px";
 
     if (cartonLottieAnim) cartonLottieAnim.destroy();
     cartonLottieOverlay.innerHTML = "";
 
+
+    // Jouer l'effet sonore
+    if (soundSrc) {
+        const delay = CARTON_SOUND_DELAYS?.[action]?.[objectKey] || 0;
+        soundTimeout = setTimeout(() => {
+            cartonSound = new Audio(soundSrc);
+            cartonSound.play().catch(err => console.warn("Erreur lecture audio carton:", err));
+        }, delay);
+    }
+
+
     cartonLottieAnim = lottie.loadAnimation({
-    container: cartonLottieOverlay,
-    renderer: "svg",
-    loop: false,
-    autoplay: true,
-    path: src,
+        container: cartonLottieOverlay,
+        renderer: "svg",
+        loop: false,
+        autoplay: true,
+        path: src,
 
     });
 
     cartonLottieAnim.addEventListener("complete", () => {
-    cartonLottieOverlay.style.display = "none";
-    cartonLottieOverlay.innerHTML = "";
-    cartonLottieAnim = null;
-    cartons.forEach(carton => {
-        carton.classList.remove("hidden");
-    });
+        cartonLottieOverlay.style.display = "none";
+        cartonLottieOverlay.innerHTML = "";
+        cartonLottieAnim = null;
+        cartons.forEach(carton => {
+            carton.classList.remove("hidden");
+        });
+
+        // Arrêter et nettoyer l'audio et le timeout
+        if (soundTimeout) {
+            clearTimeout(soundTimeout);
+            soundTimeout = null;
+        }
+        if (cartonSound) {
+            cartonSound.pause();
+            cartonSound.currentTime = 0;
+            cartonSound = null;
+        }
     });
 }

@@ -1,4 +1,3 @@
-
 :root {
     --glow-color: rgb(249, 255, 216);
     --glow: drop-shadow(0 0 .3em var(--glow-color));
@@ -16,6 +15,7 @@
     --sans-serif-font: "Cabin", sans-serif;
     --serif-font: "Alice", serif;
 }
+
 *,
 *::after,
 *::before {
@@ -24,7 +24,9 @@
     box-sizing: border-box;
 }
 
-button { font-family: var(--sans-serif-font); }
+button {
+    font-family: var(--sans-serif-font);
+}
 
 * {
     -webkit-tap-highlight-color: transparent;
@@ -53,20 +55,23 @@ body {
     justify-content: center;
     align-items: center;
 }
+
 .title-screen.disappear {
     animation: disappear var(--transition-duration) ease forwards;
 }
 
-.title-screen > * {
+.title-screen>* {
     display: block;
     font-family: var(--sans-serif-font);
 }
+
 .title-screen dotlottie-wc {
     --ratio: calc(741 / 1114);
     --width: 39em;
     width: var(--width);
     height: calc(var(--width) * var(--ratio));
 }
+
 .title-screen button {
     background: var(--beige);
     color: var(--brown);
@@ -84,12 +89,14 @@ body {
     transition: outline-width .1s ease-out;
     outline: 0em solid var(--outline);
 }
+
 .options {
     display: flex;
     margin-top: 1em;
     gap: 1.5em;
     font-size: .8em;
 }
+
 .options>button {
     --outline: var(--brown);
     padding-inline: 3.1em;
@@ -98,6 +105,7 @@ body {
     color: var(--brown);
     /* font-size: ; */
 }
+
 .title-screen button:hover {
     outline-width: .1em;
 }
@@ -131,6 +139,7 @@ body {
     animation-play-state: paused;
     background-repeat: no-repeat;
 }
+
 #skipIntro {
     z-index: 999999;
     font-family: var(--sans-serif-font);
@@ -146,6 +155,7 @@ body {
     transition: opacity .15s ease;
     width: max-content;
 }
+
 #skipIntro::before {
     display: block;
     content: "";
@@ -156,6 +166,7 @@ body {
     height: .09em;
     background: var(--cream);
 }
+
 #skipIntro.visible {
     display: block;
 }
@@ -164,24 +175,31 @@ body {
     0% {
         background: #2b2939;
     }
+
     20% {
         background: #2b2939;
     }
+
     26% {
         background: #4A4751;
     }
+
     46% {
         background: #4A4751;
     }
+
     52% {
         background: #696369;
     }
+
     72% {
         background: #696369;
     }
+
     78% {
         background: #f9ecd7;
     }
+
     to {
         background: #f9ecd7;
     }
@@ -192,10 +210,12 @@ body {
     animation-delay: calc(var(--delay) * 3 + var(--duration) * 2);
     background-image: url("./assets/scenes/intro/3.svg");
 }
+
 .intro:nth-child(2) {
     animation-delay: calc(var(--delay) * 2 + var(--duration));
     background-image: url("./assets/scenes/intro/2.svg");
 }
+
 .intro:nth-child(3) {
     animation-delay: var(--delay);
     background-image: url("./assets/scenes/intro/1.svg");
@@ -230,16 +250,19 @@ body {
     transition: filter 0.27s ease;
     transform-origin: center;
 }
+
 .hoverable-object:hover,
 .object-selected {
     transform-origin: center;
     filter: var(--glow);
     animation: wiggle 420ms steps(6, end) .27s;
 }
+
 .object-selected {
     cursor: grab;
     /* animation: wiggle 420ms steps(6, end) .27s inf; */
 }
+
 .done {
     animation: disappear .5s ease forwards;
 }
@@ -267,37 +290,44 @@ body {
     left: 17.4em;
     top: 13em;
 }
+
 #Calque-music-box {
     --size: 4.1em;
     right: 14.9em;
     top: 8.9em;
 }
+
 #Calque-caillou {
     --size: 2.12em;
     z-index: 20;
     right: 18.18em;
     bottom: 19.35em;
 }
+
 #Calque-dessin {
     --size: 7.8em;
     right: 24.7em;
     top: 8.85em;
 }
+
 #Calque-maneki {
     --size: 4.2em;
     left: 5.4em;
     top: 17.7em;
 }
+
 #Calque-fauteuil {
     --size: 15em;
     right: 2.8em;
     bottom: 5em;
 }
+
 #Calque-sweat {
     --size: 5em;
     left: 47.5%;
     bottom: 15.58em;
 }
+
 #Calque-ticket {
     --size: 2.5em;
     right: 23.1em;
@@ -319,6 +349,7 @@ body {
     transform: translateY(1em);
     transition: opacity .25s ease, transform .5s ease;
 }
+
 .Calque-carton.active {
     opacity: 1;
     transform: none;
@@ -327,36 +358,58 @@ body {
 .Calque-carton.keep {
     left: var(--inline-offset);
 }
+
 .Calque-carton.throw {
     right: var(--inline-offset);
 }
 
 
 @keyframes wiggle {
-  0%   { transform: rotate(0deg); }
-  16%  { transform: rotate(-2deg); }
-  33%  { transform: rotate(2deg); }
-  50%  { transform: rotate(-2deg); }
-  66%  { transform: rotate(1deg); }
-  83%  { transform: rotate(-1deg); }
-  100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    16% {
+        transform: rotate(-2deg);
+    }
+
+    33% {
+        transform: rotate(2deg);
+    }
+
+    50% {
+        transform: rotate(-2deg);
+    }
+
+    66% {
+        transform: rotate(1deg);
+    }
+
+    83% {
+        transform: rotate(-1deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 
 .scene-overlay {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  animation: fade-in .4s ease forwards;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    animation: fade-in .4s ease forwards;
 }
 
 @keyframes fade-in {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -375,29 +428,37 @@ body {
 }
 
 .scene-caption {
-    position: absolute;       /* 画面に対して固定表示 */
+    position: absolute;
+    /* 画面に対して固定表示 */
     left: 50%;
-    bottom: 5%;            /* 下から5%くらい上 */
+    bottom: 5%;
+    /* 下から5%くらい上 */
 
-    width: 70vw;           /* 横幅は画面の80% */
+    width: 70vw;
+    /* 横幅は画面の80% */
     padding: 1em 1.5em;
-    
-    background: var(--cream); /* 半透明の白 */
-    color: var(--dark-brown);           /* テキストは黒 */
-    
+
+    background: var(--cream);
+    /* 半透明の白 */
+    color: var(--dark-brown);
+    /* テキストは黒 */
+
     border-radius: .4em;
     line-height: 1.5;
     text-align: left;
-    
+
     opacity: 0;
-    transform: translate(-50%, 0); /* 少し下から浮いてくる */
+    transform: translate(-50%, 0);
+    /* 少し下から浮いてくる */
     transition: opacity 250ms ease;
-    
+
     font-family: var(--serif-font);
     font-weight: 400;
     font-size: 1em;
-    z-index: 2000;         /* scenePhoto より上に */
-    pointer-events: none;  /* テキストボックスは操作不要なので消しておく */
+    z-index: 2000;
+    /* scenePhoto より上に */
+    pointer-events: none;
+    /* テキストボックスは操作不要なので消しておく */
 }
 
 .scene-caption.visible {
@@ -409,44 +470,46 @@ body {
 }
 
 .fade-overlay {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  opacity: 0;              
-  pointer-events: none;  
-  transition: opacity 0.6s ease;
-  z-index: 900;           
+    position: fixed;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    z-index: 900;
 }
 
 .fade-overlay.visible {
-  opacity: 1;
-  pointer-events: auto;    
+    opacity: 1;
+    pointer-events: auto;
 }
 
-.memory-scene.hidden{
+.memory-scene.hidden {
     display: none;
 }
 
-#scene-photo.hidden{
+#scene-photo.hidden {
     display: none;
 }
 
 .memory-scene {
-  width: 100%;
-  height: 100%;
-  position: absolute;
+    width: 100%;
+    height: 100%;
+    position: absolute;
 }
 
 
 .dummy-box {
-  width: 200px;
-  height: 200px;
-  background: black;
-  margin: auto;            /* 中央寄せしたいなら */
-  position: absolute;      
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* 完全中央配置 */
+    width: 200px;
+    height: 200px;
+    background: black;
+    margin: auto;
+    /* 中央寄せしたいなら */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 完全中央配置 */
 }
 
 
@@ -455,6 +518,7 @@ body {
         font-size: .9em;
     }
 }
+
 @media screen and (max-width: 704px) {
     html {
         font-size: .9em;
@@ -505,15 +569,25 @@ body {
     bottom: 8.4em;
 
     /* 振り子アニメーション */
-    transform-origin: 50% 0%;     /* 上端中央を支点にする */
-    transform-box: fill-box;      /* SVGの描画範囲基準にするのがポイント */
+    transform-origin: 50% 0%;
+    /* 上端中央を支点にする */
+    transform-box: fill-box;
+    /* SVGの描画範囲基準にするのがポイント */
     animation: pendulum-swing 1.6s ease-in-out infinite;
 }
 
 @keyframes pendulum-swing {
-    0%   { transform: rotate(-6deg); }
-    50%  { transform: rotate(6deg); }
-    100% { transform: rotate(-6deg); }
+    0% {
+        transform: rotate(-6deg);
+    }
+
+    50% {
+        transform: rotate(6deg);
+    }
+
+    100% {
+        transform: rotate(-6deg);
+    }
 }
 
 #Calque-lamp2 {
@@ -556,6 +630,7 @@ body {
     from {
         transform: rotate(-90deg);
     }
+
     to {
         transform: rotate(0deg);
     }
@@ -564,7 +639,8 @@ body {
 #arm-chair {
     --size: 16em;
     transform: rotate(-90deg);
-    transform-origin: center; /* 好きな軸に調整 */
+    transform-origin: center;
+    /* 好きな軸に調整 */
 }
 
 .arm-chair-rotate-in {
@@ -572,14 +648,23 @@ body {
 }
 
 @keyframes scissorCut {
-    0%   { transform: rotate(0deg); }
-    50%  { transform: rotate(-12deg); }
-    100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(-12deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 #Calque-scissors:hover {
     animation: scissorCut 1.0s ease-in-out infinite;
-    transform-origin: center bottom; /* 回転の軸を調整 */
+    transform-origin: center bottom;
+    /* 回転の軸を調整 */
 }
 
 #Calque-sewing-machine {
@@ -597,9 +682,17 @@ body {
 }
 
 @keyframes sewingShake {
-    0%   { transform: translateY(0px); }
-    50%  { transform: translateY(-4px); }
-    100% { transform: translateY(0px); }
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
 }
 
 #Calque-lamp {
@@ -617,9 +710,11 @@ body {
     inset: 0;
     background: #000;
     opacity: 0.95;
-    pointer-events: none; /* クリックは下に通す */
+    pointer-events: none;
+    /* クリックは下に通す */
     transition: opacity 0.4s ease;
-    z-index: 5500; /* メモリーシーンより上にする */
+    z-index: 5500;
+    /* メモリーシーンより上にする */
 }
 
 #Calque-easter-egg {
@@ -684,22 +779,23 @@ body {
 }
 
 
-#carton-lottie-overlay{
-  position: fixed;           /* getBoundingClientRect()と相性良い */
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  display: none;
-  pointer-events: none;
-  z-index: 9999;
-  overflow: visible; 
+#carton-lottie-overlay {
+    position: fixed;
+    /* getBoundingClientRect()と相性良い */
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    display: none;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: visible;
 }
 
 /* lottie svgを箱いっぱいにフィットさせる */
-#carton-lottie-overlay svg{
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: visible;  
+#carton-lottie-overlay svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
 }

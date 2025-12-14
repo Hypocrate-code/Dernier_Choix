@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Animations Lottie de même taille</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+        }
+
+        /* 1. CLÉ DE LA SOLUTION : Définir une taille IDENTIQUE et FIXE pour les conteneurs. */
+        .lottie-container {
+            /* Fixe la largeur et la hauteur de l'espace d'affichage */
+            width: 300px;
+            height: 300px;
+
+            /* Styles de visualisation (facultatif) */
+            border: 2px solid #007bff;
+            margin: 20px;
+            display: inline-block;
+            box-sizing: border-box;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Animations Lottie à taille uniforme</h1>
+    <p>Les deux conteneurs ont une taille forcée de 300px x 300px via le CSS.</p>
+
+    <div id="lottie-collier" class="lottie-container"></div>
+
+    <div id="lottie-ticket" class="lottie-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+
+    <script>
+        // 2. Charger et initialiser les deux animations
+
+        // --- Configuration Commune ---
+        const commonRendererSettings = {
+            // CRUCIAL : Assurez-vous que les DEUX animations utilisent la même règle d'ajustement.
+            // 'xMidYMid meet' : Ajuste l'animation pour qu'elle soit entièrement visible dans le conteneur, 
+            //                   en respectant ses proportions (peut laisser des espaces vides).
+            // 'xMidYMid slice': Ajuste l'animation pour qu'elle remplisse tout le conteneur, 
+            //                   quitte à couper une partie de l'animation.
+            preserveAspectRatio: 'xMidYMid meet'
+        };
+
+
+        // --- Animation 1 : collier-donner.json ---
+        lottie.loadAnimation({
+            container: document.getElementById('lottie-collier'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'collier-donner.json', // Utilisation de votre fichier
+            rendererSettings: commonRendererSettings
+        });
+
+        // --- Animation 2 : ticket-donner.json ---
+        lottie.loadAnimation({
+            container: document.getElementById('lottie-ticket'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'ticket-donner.json', // Utilisation de votre fichier
+            rendererSettings: commonRendererSettings
+        });
+    </script>
+
+</body>
+
+</html>
