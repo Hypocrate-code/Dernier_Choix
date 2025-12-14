@@ -15,6 +15,8 @@ const memoryScene = document.getElementById("memory-scene");
 const scenePhoto = document.getElementById("scene-photo");
 const fadeOverlay = document.getElementById("fade-overlay");
 const sceneCaption = document.getElementById("scene-caption");
+const boundary = document.getElementById("drag-boundary");
+const draggables = boundary.querySelectorAll(".draggable");
 
 
 // object in memory scenes
@@ -27,13 +29,20 @@ const scissors = document.getElementById("Calque-scissors");
 const sewingMachine = document.getElementById("Calque-sewing-machine");
 const armChair = document.getElementById("Calque-arm-chair");
 const armChairInner = document.getElementById("arm-chair");
+const easterEgg = document.getElementById("Calque-easter-egg");
+const magnetFlower = document.getElementById("Calque-magnet-flower");
+const polaroid1 = document.getElementById("Calque-polaroid1");
+const polaroid2 = document.getElementById("Calque-polaroid2");
 
 // audio in memory scenes
-const scissorsSound = new Audio("./audios/meuble/sound-effects/ciseaux-tissu.mp3")
-const machineSound = new Audio("./audios/meuble/sound-effects/machine-a-coudre.mp3")
-const umino = new Audio("./audios/boite-a-musique/sound-effects/uminomieru.mp3")
+const scissorsSound = new Audio("./audios/meuble/sound-effects/ciseaux-tissu.mp3");
+const machineSound = new Audio("./audios/meuble/sound-effects/machine-a-coudre.mp3");
+const umino = new Audio("./audios/boite-a-musique/sound-effects/uminomieru.mp3");
+const dessinSound = new Audio("./audios/dessin/sound-effects/papier-qui-bouge.mp3");
 
-
+// animation cartons
+const cartonLottieOverlay = document.getElementById("carton-lottie-overlay");
+let cartonLottieAnim = null;
 
 
 let activeObject = null;
@@ -67,6 +76,29 @@ const SOUND_EFFECTS_SRC = {
     "pull" : "",
     "ticket" : ""
 }
+
+const CARTON_LOTTIE = {
+  keep: {
+    "music-box":  "assets/objets/cartons/musique-donner/musique-donner.json",
+    "caillou":    "assets/objets/cartons/caillou-donner/caillou-donner.json",
+    "collier":    "assets/objets/cartons/Donner-collier/collier-donner.json",
+    "dessin":     "assets/objets/cartons/Jeter-dessin/dessin-donner.json",
+    "maneki":     "assets/objets/cartons/maneki-donner/maneki-donner.json",
+    "fauteuil":   "assets/objets/cartons/fauteuil-donner/fauteuil-donner.json",
+    "pull":       "assets/objets/cartons/sweat-donner/sweat-donner.json",
+    "ticket":     "assets/objets/cartons/Jeter-ticket-de-caisse/ticket-donner.json",
+  },
+  throw: {
+    "music-box":  "assets/objets/cartons/musique-garder/musique-garder.json",
+    "caillou":    "assets/objets/cartons/caillou-garder/caillou-garder.json",
+    "collier":    "assets/objets/cartons/Garder-collier-chien/collier-garder.json",
+    "dessin":     "assets/objets/cartons/Garder-dessin/dessin-garder.json",
+    "maneki":     "assets/objets/cartons/maneki-garder/maneki-garder.json",
+    "fauteuil":   "assets/objets/cartons/fauteuil-garder/fauteuil-garder.json",
+    "pull":       "assets/objets/cartons/sweat-garder/sweat-garder.json",
+    "ticket":     "assets/objets/cartons/Garder-ticket-de-caisse/ticket-garder.json",
+  },
+};
 
 const startObject = {
     dataset: {
@@ -122,6 +154,7 @@ objects.forEach(object => {
 
             scenePhoto.addEventListener("click", () => {
                 stopSceneCaption();
+                dessinSound.pause();
                 overlay.classList.add("hidden");
                 scenePhoto.src = "";
                 fadeOverlayTo(0, 800, () => {
@@ -191,6 +224,43 @@ armChair.addEventListener("click", () => {
     void armChairInner.offsetWidth; // ←リフローでアニメーションをリセット
     armChairInner.classList.add("arm-chair-rotate-in");
 });
+
+draggables.forEach(el => {
+    el.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        el.classList.add("dragging");
+
+        const b = boundary.getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+
+        const offsetX = e.clientX - r.left;
+        const offsetY = e.clientY - r.top;
+
+        function move(ev) {
+            const maxLeft = b.width  - r.width;
+            const maxTop  = b.height - r.height;
+
+            let left = ev.clientX - b.left - offsetX;
+            let top  = ev.clientY - b.top  - offsetY;
+
+            left = Math.max(0, Math.min(maxLeft, left));
+            top  = Math.max(0, Math.min(maxTop, top));
+
+            el.style.left = `${left}px`;
+            el.style.top  = `${top}px`;
+        }
+
+        function up() {
+            el.classList.remove("dragging");
+            window.removeEventListener("mousemove", move);
+            window.removeEventListener("mouseup", up);
+        }
+
+        window.addEventListener("mousemove", move);
+        window.addEventListener("mouseup", up);
+    });
+});
+
 
 
 
@@ -267,6 +337,14 @@ function handleMouseUp(e) {
             // If cupboard is under the mouse, make the element disappear
             if (carton.contains(elemUnder) || carton === elemUnder) {
                 // If "keep" cupboard -> objects added to keepObjects, otherwise added to thrownObjects global list
+                const isKeep = carton.parentElement.classList.contains("keep");
+                const action = isKeep ? "keep" : "throw";
+                const objectKey = activeObject.parentElement.dataset.name; // 8種キー
+                const cartonSvg = carton.closest("svg");
+
+                playCartonLottie({ action, objectKey, cartonSvg});
+
+                isKeep ? keptObjects.push(activeObject) : thrownObjects.push(activeObject);
                 carton.parentElement.classList.contains("keep") ? keptObjects.push(activeObject) : thrownObjects.push(activeObject);
                 
                 umino.pause();
@@ -411,6 +489,10 @@ function openMemoryScene(sceneId, object){
     sewingMachine.classList.add("hidden");
     scissors.classList.add("hidden");
     armChair.classList.add("hidden");
+    easterEgg.classList.add("hidden");
+    magnetFlower.classList.add("hidden");
+    polaroid1.classList.add("hidden");
+    polaroid2.classList.add("hidden");
 
 
     if(sceneId === "music"){
@@ -427,6 +509,56 @@ function openMemoryScene(sceneId, object){
         sewingMachine.classList.remove("hidden");
         scissors.classList.remove("hidden");
         armChair.classList.remove("hidden");
+    }else if(sceneId === "dessin"){
+        memoryScene.classList.remove("hidden");
+        dessinSound.volume = 0.6;
+        dessinSound.play();
+        easterEgg.classList.remove("hidden");
+        magnetFlower.classList.remove("hidden");
+        polaroid1.classList.remove("hidden");
+        polaroid2.classList.remove("hidden");
 
     }
+}
+
+function playCartonLottie({ action, objectKey, cartonSvg }) {
+    if (!cartonLottieOverlay || !window.lottie) return;
+
+    const src = CARTON_LOTTIE?.[action]?.[objectKey];
+    if (!src) return;
+
+    const r = cartonSvg.getBoundingClientRect();
+    cartons.forEach(carton => {
+    carton.classList.add("hidden");
+    });
+
+
+    cartonLottieOverlay.style.display = "block";
+    cartonLottieOverlay.style.left = r.left + "px";
+    cartonLottieOverlay.style.top  = r.top - 130 + "px";
+    cartonLottieOverlay.style.width  = r.width +30 + "px";
+    cartonLottieOverlay.style.height = r.height +30 + "px";
+
+    if (cartonLottieAnim) cartonLottieAnim.destroy();
+    cartonLottieOverlay.innerHTML = "";
+
+    cartonLottieAnim = lottie.loadAnimation({
+    container: cartonLottieOverlay,
+    renderer: "svg",
+    loop: false,
+    autoplay: true,
+    path: src,
+    rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice"
+    }
+    });
+
+    cartonLottieAnim.addEventListener("complete", () => {
+    cartonLottieOverlay.style.display = "none";
+    cartonLottieOverlay.innerHTML = "";
+    cartonLottieAnim = null;
+    cartons.forEach(carton => {
+        carton.classList.remove("hidden");
+    });
+    });
 }
