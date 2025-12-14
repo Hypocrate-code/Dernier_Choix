@@ -717,33 +717,38 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
 }
 
 function decideEndingKey() {
-  const keptKeys = keptObjects
+    const keptKeys = keptObjects
     .map(o => o.parentElement?.dataset?.name)
     .filter(Boolean);
 
-  const thrownKeys = thrownObjects
+    const thrownKeys = thrownObjects
     .map(o => o.parentElement?.dataset?.name)
     .filter(Boolean);
 
-  const keptSet = new Set(keptKeys);
-  const thrownSet = new Set(thrownKeys);
+    const keptSet = new Set(keptKeys);
+    const thrownSet = new Set(thrownKeys);
 
-  // 全部keep
-  if (keptKeys.length === 8) return "tout";
+    // 全部keep
+    if (keptKeys.length === 8) return "tout";
 
-  // 全部throw
-  if (thrownKeys.length === 8) return "rien";
+    // 全部throw
+    if (thrownKeys.length === 8) return "rien";
 
-  // enfant系
-  if (keptSet.has("dessin") || keptSet.has("collier")) return "enfant";
-
-  // ex系
-  if (keptSet.has("pull") || keptSet.has("maneki")) return "ex";
+    // ex系
+    if (keptSet.has("pull") || keptSet.has("maneki")) return "ex";
+    // enfant系
+    if (
+    keptSet.has("dessin") ||
+    keptSet.has("collier") ||
+    keptKeys.length < 4
+    ) {
+    return "enfant";
+    }
 
     // ticketをthrowした
-  if (thrownSet.has("ticket")) return "ticket";
+    if (thrownSet.has("ticket")) return "ticket";
 
-  return "default";
+    return "default";
 }
 
 function playEnding() {
