@@ -734,14 +734,14 @@ function decideEndingKey() {
   // 全部throw
   if (thrownKeys.length === 8) return "rien";
 
-  // ticketをthrowした
-  if (thrownSet.has("ticket")) return "ticket";
-
   // enfant系
   if (keptSet.has("dessin") || keptSet.has("collier")) return "enfant";
 
   // ex系
   if (keptSet.has("pull") || keptSet.has("maneki")) return "ex";
+
+    // ticketをthrowした
+  if (thrownSet.has("ticket")) return "ticket";
 
   return "default";
 }
