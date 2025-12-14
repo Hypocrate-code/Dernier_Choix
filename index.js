@@ -33,8 +33,15 @@ const easterEgg = document.getElementById("Calque-easter-egg");
 const magnetFlower = document.getElementById("Calque-magnet-flower");
 const polaroid1 = document.getElementById("Calque-polaroid1");
 const polaroid2 = document.getElementById("Calque-polaroid2");
+const photosChien = document.querySelectorAll("#photo-chien");
+const photosChienContainer = document.getElementById("Calque-collier-souvenir");
+const tv = document.getElementById("tv");
+const lovers = document.getElementById("lovers");
+
 
 // audio in memory scenes
+const song = new Audio("./audios/song.mp3");
+song.loop = true;
 const scissorsSound = new Audio("./audios/meuble/sound-effects/ciseaux-tissu.mp3");
 const machineSound = new Audio("./audios/meuble/sound-effects/machine-a-coudre.mp3");
 const umino = new Audio("./audios/boite-a-musique/sound-effects/uminomieru.mp3");
@@ -181,6 +188,15 @@ const CARTON_SOUND_DELAYS = {
     },
 };
 
+const loader = document.querySelector(".loader");
+document.addEventListener("DOMContentLoaded", ()=> {
+    loader.style.opacity = 0;
+    loader.addEventListener("transitionend", ()=> {
+        loader.style.display = "none";
+    })
+})
+
+
 const startObject = {
     dataset: {
         intervals: "8000, 6000, 4500, 7000, 6500",
@@ -193,9 +209,10 @@ intros.forEach(intro => intro.addEventListener('animationend', () => { intro.sty
 
 startBtn.addEventListener("click", () => {
     titleSection.classList.add("disappear");
-
+    song.play();
     titleSection.addEventListener("animationend", () => {
         const audioIntro = new Audio("./audios/intro.mp3");
+        audioIntro.volume = .8;
         audioIntro.addEventListener("play", () => {
             startSceneCaption(startObject);
         })
@@ -609,7 +626,10 @@ function openMemoryScene(sceneId, object) {
     magnetFlower.classList.add("hidden");
     polaroid1.classList.add("hidden");
     polaroid2.classList.add("hidden");
-
+    photosChienContainer.classList.add("hidden");
+    boundary.classList.add('hidden');
+    lovers.classList.add('hidden');
+    tv.classList.add('hidden');
     memoryScene.classList.remove("hidden");
 
     if (sceneId === "music-box") {
@@ -629,17 +649,68 @@ function openMemoryScene(sceneId, object) {
         magnetFlower.classList.remove("hidden");
         polaroid1.classList.remove("hidden");
         polaroid2.classList.remove("hidden");
+        boundary.classList.remove('hidden');
 
-    } else if (sceneId === "collier") {
-        console.log("collier");
-    } else if (sceneId === "caillou") {
+    }else if(sceneId === "collier"){        
+        photosChienContainer.classList.remove("hidden");
+    }else if(sceneId === "caillou"){
         console.log("caillou");
     } else if (sceneId === "maneki") {
         console.log("maneki");
     } else if (sceneId === "pull") {
-        console.log("pull");
+        lovers.classList.remove('hidden');
+        tv.classList.remove('hidden'); 
     }
 }
+
+tv.addEventListener("click", ()=> {
+    if (tv.src.includes("kiki")) {
+        tv.src = "assets/souvenirs/parts/pull/got.svg";
+    }
+    else if (tv.src.includes("got")) {
+        tv.src = "assets/souvenirs/parts/pull/hypload.png";
+    }
+    else if (tv.src.includes("hypload")) {
+        tv.src = "assets/souvenirs/parts/pull/stranger-things.svg";
+    }
+    else {
+        tv.src = "assets/souvenirs/parts/pull/kiki.svg";
+    }
+
+    
+})
+
+const normeDeplacementCollier = 22;
+photosChienContainer.addEventListener("mouseover", (e) => {
+    const rect = photosChienContainer.getBoundingClientRect();
+    photosChien.forEach(photo => {
+        // Pos mouse
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        console.log("mouseX : ", mouseX, "mouseY : ", mouseY);
+        
+        // Pos photo
+        const posX = photo.getBoundingClientRect().left - rect.left + (photo.getBoundingClientRect().width/2);
+        const posY = photo.getBoundingClientRect().top - rect.top + (photo.getBoundingClientRect().height/2);
+        console.log( `posY : ${posY}`);
+        let x = posX - mouseX;
+        let y = posY - mouseY;
+        console.log( `y : ${y}`);
+        const norme = Math.sqrt(x**2 + y**2);
+        console.log( `norme : ${norme}`);
+        x/=norme;        
+        y/=norme;
+        x*=normeDeplacementCollier;
+        y*=normeDeplacementCollier;
+        console.log(`translateY(${y}px)`);
+        photo.style.transform = `translate(${x}px) translateY(${y}px)`;
+    })
+})
+photosChienContainer.addEventListener("mouseleave", (e) => {
+    photosChien.forEach(photo => {
+        photo.style.transform = `none`;
+    })
+})
 
 function playCartonLottie({ action, objectKey, cartonSvg }) {
     if (!cartonLottieOverlay || !window.lottie) return;
@@ -676,6 +747,7 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
         const delay = CARTON_SOUND_DELAYS?.[action]?.[objectKey] || 0;
         soundTimeout = setTimeout(() => {
             cartonSound = new Audio(soundSrc);
+            cartonSound.volume = 0.2;
             cartonSound.play().catch(err => console.warn("Erreur lecture audio carton:", err));
         }, delay);
     }

@@ -16,6 +16,14 @@
     --serif-font: "Alice", serif;
 }
 
+.loader {
+    position: fixed;
+    inset: 0;
+    background: black;
+    z-index: 99999;
+    transition: opacity .7s ease-in .5s;
+}
+
 *,
 *::after,
 *::before {
@@ -419,8 +427,8 @@ body {
     max-width: 70vw;
     max-height: 70vh;
     object-fit: contain;
-    border-radius: 8px;
-    cursor: pointer;
+    border-radius: .5em;
+    /* cursor: pointer; */
 }
 
 .hidden {
@@ -465,10 +473,6 @@ body {
     opacity: 1;
 }
 
-.scene-caption.hidden {
-    display: none;
-}
-
 .fade-overlay {
     position: fixed;
     inset: 0;
@@ -482,14 +486,6 @@ body {
 .fade-overlay.visible {
     opacity: 1;
     pointer-events: auto;
-}
-
-.memory-scene.hidden {
-    display: none;
-}
-
-#scene-photo.hidden {
-    display: none;
 }
 
 .memory-scene {
@@ -755,6 +751,44 @@ body {
     pointer-events: auto;
     cursor: pointer;
     z-index: 4500;
+}
+
+#Calque-collier-souvenir {
+    z-index: 9999;
+    max-width: 70vw;
+    max-height: 70vh;
+    width: auto;
+    height: auto;
+    margin: 5em auto;
+    border-radius: .5em;
+    overflow: hidden;
+    pointer-events: auto;
+}
+#photo-chien {
+    transition: transform .2s ease-out;
+    transform-origin: center;
+}
+#tv {
+    width: 12.7em;
+    height: 7em;
+    left: 37.6%;
+    top: 9.3em;
+    border-radius: 0;
+    object-fit: cover;
+    position: absolute;
+    cursor: pointer;
+    pointer-events: auto;
+}
+#lovers {
+    max-width: 57vw;
+    max-height: 57vh;
+    height: 100%;
+    width: 100%;
+    z-index: 99;
+    position: absolute;
+    bottom: 14.5vh;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .draggable {
