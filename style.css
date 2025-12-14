@@ -818,3 +818,36 @@ body {
   height: 100%;
   display: block;
 }
+
+#credits-overlay{
+  position: fixed;
+  inset: 0;
+  background: #0b0b0b;
+  z-index: 999999;     /* ★最前面に */
+  display: none;
+  cursor: pointer;
+}
+
+#credits-overlay.visible{ display:block; }
+#credits-overlay.hidden{ display:none; }
+
+#credits-scroll{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* ★幅ではなく“高さに対して”収まるようにする（拡大しすぎ防止） */
+#credits-image{
+  display: block;
+  margin: 0 auto;
+
+  /* 画面内で自然なサイズになるように制限 */
+  max-width: 92vw;
+  width: auto;
+  height: auto;
+
+  /* ここがポイント：大きすぎる場合は縮む */
+  transform: translateY(0);
+  will-change: transform;
+}

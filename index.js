@@ -61,6 +61,15 @@ const ENDING_AUDIO = {
   ticket:  "assets/ending/sound/fin-ticket.mp3",
 };
 
+
+// === credits ===
+const creditsOverlay = document.getElementById("credits-overlay");
+const creditsImg = document.getElementById("credits-image");
+
+let creditsRAF = null;
+
+
+
 let activeObject = null;
 let currentObject = null;
 let keptObjects = [];
@@ -365,6 +374,10 @@ draggables.forEach(el => {
     });
 });
 
+// Creditsボタンで開始
+creditsBtn.addEventListener("click", () => {
+  startCreditsScroll(18000); // 速度調整したければここ（ms）
+});
 
 
 
@@ -802,3 +815,49 @@ function returnToTitle() {
   // エンディング片付け
     window.location.reload();
 }
+
+function startCreditsScroll(durationMs = 500000, paddingPx = 40) {
+  if (!creditsOverlay || !creditsImg) return;
+
+  // 表示
+  creditsOverlay.classList.remove("hidden");
+  creditsOverlay.classList.add("visible");
+  creditsOverlay.setAttribute("aria-hidden", "false");
+
+  // 既存のアニメがあれば止める
+  if (creditsRAF) cancelAnimationFrame(creditsRAF);
+
+  // 画像ロード後にスクロール開始
+  const run = () => {
+    const viewportH = window.innerHeight;
+    const imgH = creditsImg.getBoundingClientRect().height;
+
+    // 下から出てきて、上に抜けるまで
+    const fromY = viewportH + paddingPx;
+    const toY = -(imgH + paddingPx);
+
+    const start = performance.now();
+
+    const tick = (now) => {
+      const t = Math.min(1, (now - start) / durationMs);
+      const y = fromY + (toY - fromY) * t;
+      creditsImg.style.transform = `translateY(${y}px)`;
+
+      if (t < 1) {
+        creditsRAF = requestAnimationFrame(tick);
+      } else {
+        // 最後まで流れたら止める（クリック待ち）
+        creditsRAF = null;
+      }
+    };
+
+    creditsRAF = requestAnimationFrame(tick);
+  };
+
+  if (creditsImg.complete) run();
+  else creditsImg.onload = run;
+
+  // クリックでリロード
+  creditsOverlay.addEventListener("click", () => location.reload(), { once: true });
+}
+
