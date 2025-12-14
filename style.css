@@ -93,7 +93,7 @@ body {
 .options>button {
     --outline: var(--brown);
     padding-inline: 3.1em;
-    padding-bottom: .57em;
+    padding-: .57em;
     background: var(--cream);
     color: var(--brown);
     /* font-size: ; */
@@ -117,7 +117,6 @@ body {
     animation: fade-in var(--transition-duration) ease forwards;
     opacity: 1;
     transition: opacity 0.6s ease;
-    pointer-events: none;
 }
 
 .intro {
@@ -135,13 +134,27 @@ body {
 #skipIntro {
     z-index: 999999;
     font-family: var(--sans-serif-font);
-    text-decoration: underline;
+    font-style: italic;
     top: 1em;
     display: none;
-    right: 1em;
-    position: absolute;
-    color: rgba(245, 245, 245, 0.742);
+    left: 1em;
+    cursor: pointer;
+    position: relative;
+    font-weight: 100 !important;
+    color: var(--cream);
+    opacity: .8;
     transition: opacity .15s ease;
+    width: max-content;
+}
+#skipIntro::before {
+    display: block;
+    content: "";
+    position: absolute;
+    bottom: -.1em;
+    width: 100%;
+    border-radius: 1em;
+    height: .09em;
+    background: var(--cream);
 }
 #skipIntro.visible {
     display: block;
@@ -680,7 +693,7 @@ body {
   display: none;
   pointer-events: none;
   z-index: 9999;
-  overflow: visible;  
+  overflow: visible; 
 }
 
 /* lottie svgを箱いっぱいにフィットさせる */

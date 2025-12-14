@@ -38,7 +38,6 @@ const polaroid2 = document.getElementById("Calque-polaroid2");
 const scissorsSound = new Audio("./audios/meuble/sound-effects/ciseaux-tissu.mp3");
 const machineSound = new Audio("./audios/meuble/sound-effects/machine-a-coudre.mp3");
 const umino = new Audio("./audios/boite-a-musique/sound-effects/uminomieru.mp3");
-const dessinSound = new Audio("./audios/dessin/sound-effects/papier-qui-bouge.mp3");
 
 // animation cartons
 const cartonLottieOverlay = document.getElementById("carton-lottie-overlay");
@@ -124,10 +123,18 @@ startBtn.addEventListener("click", () => {
         titleSection.style.display = "none";
         sceneContainer.style.display = "block";
         skipBtn.classList.add("visible");
-        audioIntro.addEventListener("ended", ()=> {
-            skipBtn.classList.add("remove");
-            sceneContainer.style.pointerEvents = "auto";
+        skipBtn.addEventListener("click", ()=> {
+            audioIntro.pause();
+            document.documentElement.style.animation = "none";
+            document.documentElement.style.backgroundColor = "#f9ecd7";
+            intros.forEach(intro => intro.style.display="none");
+            skipBtn.classList.remove("visible");
             stopSceneCaption();
+        }, {once: true})
+        audioIntro.addEventListener("ended", ()=> {
+            skipBtn.classList.remove("visible");
+            stopSceneCaption();
+            skipBtn.removeEventListener("click");
         }, {once: true})
     }, {once: true})
 })
@@ -139,7 +146,7 @@ objects.forEach(object => {
     object.addEventListener("click", () => {
         if (activeObject !== null) { return; }        
         activeObject = object;
-        const sceneId = object.dataset.sceneId || "static";
+        const sceneId = object.parentElement.dataset.name || "static";
         scenePhoto.src = object.dataset.scene;
         const audio = new Audio(AUDIOS_SRC[activeObject.parentElement.dataset.name]);
 
@@ -153,8 +160,8 @@ objects.forEach(object => {
             startSceneCaption(activeObject);
 
             scenePhoto.addEventListener("click", () => {
+                audio.pause();
                 stopSceneCaption();
-                dessinSound.pause();
                 overlay.classList.add("hidden");
                 scenePhoto.src = "";
                 fadeOverlayTo(0, 800, () => {
@@ -494,30 +501,34 @@ function openMemoryScene(sceneId, object){
     polaroid1.classList.add("hidden");
     polaroid2.classList.add("hidden");
 
+    memoryScene.classList.remove("hidden");
 
-    if(sceneId === "music"){
+    if(sceneId === "music-box"){
         umino.volume = 0.8;
         umino.play();
-        memoryScene.classList.remove("hidden");
         lamp.classList.remove("hidden");
         pendule.classList.remove("hidden");
         horloge.classList.remove("hidden");
-    }else if(sceneId === "chair"){
-        memoryScene.classList.remove("hidden");
+    }else if(sceneId === "fauteuil"){
         sew.classList.remove("hidden");
         lamp2.classList.remove("hidden");
         sewingMachine.classList.remove("hidden");
         scissors.classList.remove("hidden");
         armChair.classList.remove("hidden");
     }else if(sceneId === "dessin"){
-        memoryScene.classList.remove("hidden");
-        dessinSound.volume = 0.6;
-        dessinSound.play();
         easterEgg.classList.remove("hidden");
         magnetFlower.classList.remove("hidden");
         polaroid1.classList.remove("hidden");
         polaroid2.classList.remove("hidden");
 
+    }else if(sceneId === "collier"){
+        console.log("collier");
+    }else if(sceneId === "caillou"){
+        console.log("caillou");
+    }else if(sceneId === "maneki"){
+        console.log("maneki");
+    }else if(sceneId === "pull"){
+        console.log("pull");
     }
 }
 
@@ -529,10 +540,11 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
 
     const r = cartonSvg.getBoundingClientRect();
     cartons.forEach(carton => {
-    carton.classList.add("hidden");
+        carton.classList.add("hidden");
     });
 
-
+    console.log(cartonSvg);
+    
     cartonLottieOverlay.style.display = "block";
     cartonLottieOverlay.style.left = r.left + "px";
     cartonLottieOverlay.style.top  = r.top - 130 + "px";
@@ -548,9 +560,7 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
     loop: false,
     autoplay: true,
     path: src,
-    rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
-    }
+
     });
 
     cartonLottieAnim.addEventListener("complete", () => {
