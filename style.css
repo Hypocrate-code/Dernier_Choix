@@ -50,10 +50,9 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: opacity var(--transition-duration) ease;
 }
 .title-screen.disappear {
-    opacity: 0;
+    animation: disappear var(--transition-duration) ease forwards;
 }
 
 .title-screen > * {
@@ -130,6 +129,20 @@ body {
     animation: disappear var(--duration) linear forwards;
     animation-play-state: paused;
     background-repeat: no-repeat;
+}
+#skipIntro {
+    z-index: 999999;
+    font-family: var(--sans-serif-font);
+    text-decoration: underline;
+    top: 1em;
+    display: none;
+    right: 1em;
+    position: absolute;
+    color: rgba(245, 245, 245, 0.742);
+    transition: opacity .15s ease;
+}
+#skipIntro.visible {
+    display: block;
 }
 
 @keyframes bg-intro {

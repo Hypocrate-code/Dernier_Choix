@@ -1,4 +1,5 @@
 const startBtn = document.querySelector("#start");
+const skipBtn = document.querySelector("#skipIntro");
 const creditsBtn = document.querySelector("#credits");
 const titleSection = document.querySelector(".title-screen")
 
@@ -69,7 +70,7 @@ const SOUND_EFFECTS_SRC = {
 
 const startObject = {
     dataset: {
-        intervals: "9000, 6000, 4000, 6000, 6500",
+        intervals: "8000, 6000, 4500, 7000, 6500",
         story: "Dans trois jours, nouvelle vie. Nouvelle ville et nouveau studio microscopique. Et moi, plantée là avec mes cartons vides et mes souvenirs partout.|L'opportunité professionnelle que j'ai acceptée m'emmène vers un avenir prometteur, mais dans une ville plus chère où chaque mètre carré compte.|Mon futur studio sera trois fois plus petit que cet espace où j'ai vécu tant d'histoires.|La peluche. Le journal. Le canapé. Les meubles chinés. Chaque objet me regarde comme si je trahissais une partie de moi.|Derrière moi, les fantômes d'une histoire qui s'achève, les objets, eux, n'ont pas encore compris qu'il fallait partir.|Allez, pas le temps de pleurer. Il faut choisir, garder l'essentiel mais certains objets sont plus difficiles à trier que d’autres."
     }
 };
@@ -78,8 +79,9 @@ const startObject = {
 intros.forEach(intro => intro.addEventListener('animationend', () => {intro.style.display = "none"}, {once: true}))
 
 startBtn.addEventListener("click", () => {
-
-    titleSection.addEventListener("transitionend", ()=> {
+    titleSection.classList.add("disappear");
+    
+    titleSection.addEventListener("animationend", ()=> {
         const audioIntro = new Audio("./audios/intro.mp3");
         audioIntro.addEventListener("play", () => {
             startSceneCaption(startObject);
@@ -89,7 +91,9 @@ startBtn.addEventListener("click", () => {
         document.documentElement.style.animationPlayState = "running";
         titleSection.style.display = "none";
         sceneContainer.style.display = "block";
+        skipBtn.classList.add("visible");
         audioIntro.addEventListener("ended", ()=> {
+            skipBtn.classList.add("remove");
             sceneContainer.style.pointerEvents = "auto";
             stopSceneCaption();
         }, {once: true})
