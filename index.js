@@ -386,7 +386,8 @@ draggables.forEach(el => {
 
 // Creditsボタンで開始
 creditsBtn.addEventListener("click", () => {
-  startCreditsScroll(18000); // 速度調整したければここ（ms）
+    song.play();
+    startCreditsScroll(50000); // 速度調整したければここ（ms）
 });
 
 

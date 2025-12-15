@@ -948,8 +948,7 @@ body {
   margin: 0 auto;
 
   /* 画面内で自然なサイズになるように制限 */
-  max-width: 92vw;
-  width: auto;
+  width: 100%;
   height: auto;
 
   /* ここがポイント：大きすぎる場合は縮む */
