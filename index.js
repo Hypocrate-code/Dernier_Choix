@@ -43,10 +43,10 @@ const leaves = document.querySelectorAll(".leaves-container > img");
 
 
 // audio in memory scenes
-const song = new Audio("./audios/song.mp3");
+const song = new Audio("./compressed/audios/song.mp3");
 song.loop = true;
-const scissorsSound = new Audio("./audios/meuble/sound-effects/ciseaux-tissu.mp3");
-const machineSound = new Audio("./audios/meuble/sound-effects/machine-a-coudre.mp3");
+const scissorsSound = new Audio("./compressed/audios/meuble/sound-effects/ciseaux-tissu.mp3");
+const machineSound = new Audio("./compressed/audios/meuble/sound-effects/machine-a-coudre.mp3");
 
 // animation cartons
 const cartonLottieOverlay = document.getElementById("carton-lottie-overlay");
@@ -62,12 +62,12 @@ let endingSound = null;
 let drivingLoop = null;
 
 const ENDING_AUDIO = {
-    default: "assets/ending/sound/fin-defaut.mp3",
-    enfant: "assets/ending/sound/fin-enfant.mp3",
-    ex: "assets/ending/sound/fin-ex.mp3",
-    rien: "assets/ending/sound/fin-garde-rien.mp3",
-    tout: "assets/ending/sound/fin-garde-tout.mp3",
-    ticket: "assets/ending/sound/fin-ticket.mp3",
+    default: "compressed/assets/ending/sound/fin-defaut.mp3",
+    enfant: "compressed/assets/ending/sound/fin-enfant.mp3",
+    ex: "compressed/assets/ending/sound/fin-ex.mp3",
+    rien: "compressed/assets/ending/sound/fin-garde-rien.mp3",
+    tout: "compressed/assets/ending/sound/fin-garde-tout.mp3",
+    ticket: "compressed/assets/ending/sound/fin-ticket.mp3",
 };
 
 
@@ -92,68 +92,68 @@ let currentCaptionIndex = 0;
 let currentCaptionLines = [];
 
 const AUDIOS_SRC = {
-    "music-box": "audios/boite-a-musique/audio.mp3",
-    "caillou": "audios/caillou/audio.mp3",
-    "collier": "audios/collier/audio.mp3",
-    "dessin": "audios/dessin/audio.mp3",
-    "maneki": "audios/maneki/audio.mp3",
-    "fauteuil": "audios/meuble/audio.mp3",
-    "pull": "audios/pull/audio.mp3",
-    "ticket": "audios/ticket/audio.mp3"
+    "music-box": "compressed/audios/boite-a-musique/audio.mp3",
+    "caillou": "compressed/audios/caillou/audio.mp3",
+    "collier": "compressed/audios/collier/audio.mp3",
+    "dessin": "compressed/audios/dessin/audio.mp3",
+    "maneki": "compressed/audios/maneki/audio.mp3",
+    "fauteuil": "compressed/audios/meuble/audio.mp3",
+    "pull": "compressed/audios/pull/audio.mp3",
+    "ticket": "compressed/audios/ticket/audio.mp3"
 }
 
 const CARTON_LOTTIE = {
     throw: {
-        "music-box": "assets/objets/cartons/musique-donner/musique-donner.json",
-        "caillou": "assets/objets/cartons/caillou-donner/caillou-donner.json",
-        "collier": "assets/objets/cartons/Donner-collier/collier-donner.json",
-        "dessin": "assets/objets/cartons/Jeter-dessin/dessin-donner.json",
-        "maneki": "assets/objets/cartons/maneki-donner/maneki-donner.json",
-        "fauteuil": "assets/objets/cartons/fauteuil-donner/fauteuil-donner.json",
-        "pull": "assets/objets/cartons/sweat-donner/sweat-donner.json",
-        "ticket": "assets/objets/cartons/Jeter-ticket-de-caisse/ticket-donner.json",
+        "music-box": "compressed/assets/objets/cartons/musique-donner/musique-donner.json",
+        "caillou": "compressed/assets/objets/cartons/caillou-donner/caillou-donner.json",
+        "collier": "compressed/assets/objets/cartons/Donner-collier/collier-donner.json",
+        "dessin": "compressed/assets/objets/cartons/Jeter-dessin/dessin-donner.json",
+        "maneki": "compressed/assets/objets/cartons/maneki-donner/maneki-donner.json",
+        "fauteuil": "compressed/assets/objets/cartons/fauteuil-donner/fauteuil-donner.json",
+        "pull": "compressed/assets/objets/cartons/sweat-donner/sweat-donner.json",
+        "ticket": "compressed/assets/objets/cartons/Jeter-ticket-de-caisse/ticket-donner.json",
     },
     keep: {
-        "music-box": "assets/objets/cartons/musique-garder/musique-garder.json",
-        "caillou": "assets/objets/cartons/caillou-garder/caillou-garder.json",
-        "collier": "assets/objets/cartons/Garder-collier-chien/collier-garder.json",
-        "dessin": "assets/objets/cartons/Garder-dessin/dessin-garder.json",
-        "maneki": "assets/objets/cartons/maneki-garder/maneki-garder.json",
-        "fauteuil": "assets/objets/cartons/fauteuil-garder/fauteuil-garder.json",
-        "pull": "assets/objets/cartons/sweat-garder/sweat-garder.json",
-        "ticket": "assets/objets/cartons/Garder-ticket-de-caisse/ticket-garder.json",
+        "music-box": "compressed/assets/objets/cartons/musique-garder/musique-garder.json",
+        "caillou": "compressed/assets/objets/cartons/caillou-garder/caillou-garder.json",
+        "collier": "compressed/assets/objets/cartons/Garder-collier-chien/collier-garder.json",
+        "dessin": "compressed/assets/objets/cartons/Garder-dessin/dessin-garder.json",
+        "maneki": "compressed/assets/objets/cartons/maneki-garder/maneki-garder.json",
+        "fauteuil": "compressed/assets/objets/cartons/fauteuil-garder/fauteuil-garder.json",
+        "pull": "compressed/assets/objets/cartons/sweat-garder/sweat-garder.json",
+        "ticket": "compressed/assets/objets/cartons/Garder-ticket-de-caisse/ticket-garder.json",
     },
 };
 
 const ENDING_LOTTIE = {
-    "default": "assets/ending/defaut.json",
-    "enfant": "assets/ending/enfant.json",
-    "ex": "assets/ending/ex.json",
-    "rien": "assets/ending/rien.json",
-    "ticket": "assets/ending/ticket.json",
-    "tout": "assets/ending/tout-.json",
+    "default": "compressed/assets/ending/defaut.json",
+    "enfant": "compressed/assets/ending/enfant.json",
+    "ex": "compressed/assets/ending/ex.json",
+    "rien": "compressed/assets/ending/rien.json",
+    "ticket": "compressed/assets/ending/ticket.json",
+    "tout": "compressed/assets/ending/tout-.json"
 }
 
 const CARTON_SOUNDS = {
     throw: {
-        "music-box": "assets/objets/cartons/musique-donner/piano-slam-lid-move-chair-43789.mp3",
-        "caillou": "assets/objets/cartons/caillou-donner/small-rock-break-194553.mp3",
-        "collier": "assets/objets/cartons/Donner-collier/sound-of-ice-cracking-426894.mp3",
-        "dessin": "assets/objets/cartons/Jeter-dessin/the-sound-of-an-exploding-cracker-with-tinsel-or-confetti.mp3",
-        "maneki": "assets/objets/cartons/maneki-donner/cat-meow-sound-383823.mp3",
-        "fauteuil": "assets/objets/cartons/fauteuil-donner/cartoon-spring-bright-fx_179bpm.wav",
-        "pull": "assets/objets/cartons/sweat-donner/cashier-quotka-chingquot-sound-effect-129698.mp3",
-        "ticket": "assets/objets/cartons/Jeter-ticket-de-caisse/the-impatient-sound-of-a-paper-envelope-tearing.mp3",
+        "music-box": "compressed/assets/objets/cartons/musique-donner/piano-slam-lid-move-chair-43789.mp3",
+        "caillou": "compressed/assets/objets/cartons/caillou-donner/small-rock-break-194553.mp3",
+        "collier": "compressed/assets/objets/cartons/Donner-collier/sound-of-ice-cracking-426894.mp3",
+        "dessin": "compressed/assets/objets/cartons/Jeter-dessin/the-sound-of-an-exploding-cracker-with-tinsel-or-confetti.mp3",
+        "maneki": "compressed/assets/objets/cartons/maneki-donner/cat-meow-sound-383823.mp3",
+        "fauteuil": "compressed/assets/objets/cartons/fauteuil-donner/cartoon-spring-bright-fx_179bpm.wav",
+        "pull": "compressed/assets/objets/cartons/sweat-donner/cashier-quotka-chingquot-sound-effect-129698.mp3",
+        "ticket": "compressed/assets/objets/cartons/Jeter-ticket-de-caisse/the-impatient-sound-of-a-paper-envelope-tearing.mp3",
     },
     keep: {
-        "music-box": "assets/objets/cartons/musique-garder/playing-the-harp-up-the-scale-slowly.mp3",
-        "caillou": "assets/objets/cartons/caillou-garder/rainy-night-ambience-loop-31064.mp3",// Pas de fichier son disponible
-        "collier": "assets/objets/cartons/Garder-collier-chien/dog-sound.mp3",
-        "dessin": "assets/objets/cartons/Garder-dessin/children-giggling-kids-laughing-hd-378111.mp3",
-        "maneki": "assets/objets/cartons/maneki-garder/montbell-bonsho-von-japan-30695.mp3",
-        "fauteuil": "assets/objets/cartons/fauteuil-garder/diamond-found-190255.mp3",
-        "pull": "assets/objets/cartons/sweat-garder/warm-piano-logo-116098.mp3",
-        "ticket": "assets/objets/cartons/Garder-ticket-de-caisse/the-noise-of-a-large-stack-of-papers-falling.mp3",
+        "music-box": "compressed/assets/objets/cartons/musique-garder/playing-the-harp-up-the-scale-slowly.mp3",
+        "caillou": "compressed/assets/objets/cartons/caillou-garder/rainy-night-ambience-loop-31064.mp3",// Pas de fichier son disponible
+        "collier": "compressed/assets/objets/cartons/Garder-collier-chien/dog-sound.mp3",
+        "dessin": "compressed/assets/objets/cartons/Garder-dessin/children-giggling-kids-laughing-hd-378111.mp3",
+        "maneki": "compressed/assets/objets/cartons/maneki-garder/montbell-bonsho-von-japan-30695.mp3",
+        "fauteuil": "compressed/assets/objets/cartons/fauteuil-garder/diamond-found-190255.mp3",
+        "pull": "compressed/assets/objets/cartons/sweat-garder/warm-piano-logo-116098.mp3",
+        "ticket": "compressed/assets/objets/cartons/Garder-ticket-de-caisse/the-noise-of-a-large-stack-of-papers-falling.mp3",
     },
 };
 
@@ -204,7 +204,7 @@ startBtn.addEventListener("click", () => {
     titleSection.classList.add("disappear");
     song.play();
     titleSection.addEventListener("animationend", () => {
-        const audioIntro = new Audio("./audios/intro.mp3");
+        const audioIntro = new Audio("./compressed/audios/intro.mp3");
         audioIntro.volume = .8;
         audioIntro.addEventListener("play", () => {
             startSceneCaption(startObject);
@@ -690,7 +690,7 @@ function openMemoryScene(sceneId, object) {
             });
         }, { once: true })
     } else if (sceneId === "caillou") {
-        actualAmbianceSound = new Audio("audios/caillou/pluie.mp3");
+        actualAmbianceSound = new Audio("compressed/audios/caillou/pluie.mp3");
         actualAmbianceSound.loop = true;
         actualAmbianceSound.volume = 0.85;
         actualAmbianceSound.play();
@@ -706,7 +706,7 @@ function openMemoryScene(sceneId, object) {
             });
         }, { once: true })
     } else if (sceneId === "maneki") {
-        actualAmbianceSound = new Audio("audios/maneki/furin-loop.mp3");
+        actualAmbianceSound = new Audio("compressed/audios/maneki/furin-loop.mp3");
         actualAmbianceSound.loop = true;
         actualAmbianceSound.play();
         objetsManeki.classList.remove("hidden");
@@ -718,16 +718,16 @@ function openMemoryScene(sceneId, object) {
 
 tv.addEventListener("click", () => {
     if (tv.src.includes("kiki")) {
-        tv.src = "assets/souvenirs/parts/pull/got.svg";
+        tv.src = "compressed/assets/souvenirs/parts/pull/got.svg";
     }
     else if (tv.src.includes("got")) {
-        tv.src = "assets/souvenirs/parts/pull/hypload.png";
+        tv.src = "compressed/assets/souvenirs/parts/pull/hypload.png";
     }
     else if (tv.src.includes("hypload")) {
-        tv.src = "assets/souvenirs/parts/pull/stranger-things.svg";
+        tv.src = "compressed/assets/souvenirs/parts/pull/stranger-things.svg";
     }
     else {
-        tv.src = "assets/souvenirs/parts/pull/kiki.svg";
+        tv.src = "compressed/assets/souvenirs/parts/pull/kiki.svg";
     }
 
 
@@ -779,7 +779,7 @@ leavesContainer.addEventListener("mousemove", (e) => {
         const normeDeplacementFeuilles = norme < 100 ? 100 - norme : 0;
         if (norme < 100 && !leaf.dataset.hasPlayedASound == true) {
             leaf.dataset.hasPlayedASound = true;
-            new Audio(`./audios/caillou/sound-effects/leaf-${Math.floor(Math.random() * 3) + 1}.mp3`).play();
+            new Audio(`./compressed/audios/caillou/sound-effects/leaf-${Math.floor(Math.random() * 3) + 1}.mp3`).play();
         }
         x *= normeDeplacementFeuilles;
         y *= normeDeplacementFeuilles;
@@ -977,7 +977,7 @@ function playEnding() {
 
     // ★ticket以外なら driving-loop をループ再生
     if (key !== "ticket") {
-        drivingLoop = new Audio("assets/ending/sound/driving-loop.mp3"); // パスは適宜
+        drivingLoop = new Audio("compressed/assets/ending/sound/driving-loop.mp3"); // パスは適宜
         drivingLoop.loop = true;
         drivingLoop.volume = 1.0; // 好みで（エンディング音とぶつかるなら下げる）
         drivingLoop.play().catch(err => console.warn("Driving loop blocked:", err));
@@ -1014,7 +1014,6 @@ function returnToTitle() {
 
 function startCreditsScroll(durationMs = 500000, paddingPx = 40) {
     if (!creditsOverlay || !creditsImg) return;
-
     // 表示
     creditsOverlay.classList.remove("hidden");
     creditsOverlay.classList.add("visible");

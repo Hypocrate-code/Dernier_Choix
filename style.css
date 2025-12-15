@@ -952,7 +952,7 @@ body {
 #credits-overlay {
     position: fixed;
     inset: 0;
-    background: #0b0b0b;
+    background: var(--dark-dark-brown);
     z-index: 999999;
     /* ★最前面に */
     display: none;
