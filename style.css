@@ -765,10 +765,12 @@ body {
     overflow: hidden;
     pointer-events: auto;
 }
+
 #photo-chien {
     transition: transform .2s ease-out;
     transform-origin: center;
 }
+
 #tv {
     width: 12.7em;
     height: 7em;
@@ -780,6 +782,7 @@ body {
     cursor: pointer;
     pointer-events: auto;
 }
+
 #lovers {
     max-width: 57vw;
     max-height: 57vh;
@@ -792,12 +795,14 @@ body {
     left: 50%;
     transform: translateX(-50%);
 }
+
 #objets_maneki {
     position: absolute;
     right: 12em;
     bottom: 7em;
     width: 20em;
 }
+
 #objet_maneki {
     --deg: 8deg;
     display: block;
@@ -806,9 +811,11 @@ body {
     transition: rotate .3s ease;
     pointer-events: auto;
 }
+
 #objet_maneki:nth-of-type(odd):hover {
     rotate: var(--deg);
 }
+
 #objet_maneki:nth-of-type(even):hover {
     rotate: calc(-1*var(--deg));
 }
@@ -821,9 +828,10 @@ body {
     margin: 5em auto;
     position: relative;
     pointer-events: auto;
-    
+
 }
-.leaves-container > img {
+
+.leaves-container>img {
     z-index: 9999;
     user-select: none;
     pointer-events: none;
@@ -831,37 +839,44 @@ body {
     transition: transform .1s ease;
     width: 6em;
 }
-.leaves-container > img:nth-child(1) {
+
+.leaves-container>img:nth-child(1) {
     top: 0;
     left: 20%;
 }
-.leaves-container > img:nth-child(2) {
+
+.leaves-container>img:nth-child(2) {
     right: 30%;
     top: 10%;
     width: 7.7em;
 }
-.leaves-container > img:nth-child(3) {
+
+.leaves-container>img:nth-child(3) {
     bottom: 20%;
     right: 15%;
     width: 6em;
 }
-.leaves-container > img:nth-child(4) {
+
+.leaves-container>img:nth-child(4) {
     top: -2%;
     right: 10%;
     width: 5.1em;
     z-index: 10;
 }
-.leaves-container > img:nth-child(5) {
+
+.leaves-container>img:nth-child(5) {
     top: 1%;
     right: 15%;
     width: 4.6em;
 }
-.leaves-container > img:nth-child(6) {
+
+.leaves-container>img:nth-child(6) {
     bottom: 14%;
     left: 5%;
     width: 4.4em;
 }
-.leaves-container > img:nth-child(7) {
+
+.leaves-container>img:nth-child(7) {
     top: 25%;
     left: 11%;
     width: 5.5em;
@@ -910,53 +925,64 @@ body {
     overflow: visible;
 }
 
-#ending-overlay{
-  position: fixed;
-  inset: 0;
-  z-index: 20000;
-  background: #000;           /* 任意。透過にしたいなら消す */
-  pointer-events: none;       /* 再生中はクリック無効 */
-}
-#ending-overlay.visible{
-  display: block;
-}
-#ending-overlay.hidden{
-  display: none;
-}
-#ending-overlay svg{
-  width: 100%;
-  height: 100%;
-  display: block;
+#ending-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    background: #000;
+    /* 任意。透過にしたいなら消す */
+    pointer-events: none;
+    /* 再生中はクリック無効 */
 }
 
-#credits-overlay{
-  position: fixed;
-  inset: 0;
-  background: #0b0b0b;
-  z-index: 999999;     /* ★最前面に */
-  display: none;
-  cursor: pointer;
+#ending-overlay.visible {
+    display: block;
 }
 
-#credits-overlay.visible{ display:block; }
-#credits-overlay.hidden{ display:none; }
+#ending-overlay.hidden {
+    display: none;
+}
 
-#credits-scroll{
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
+#ending-overlay svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#credits-overlay {
+    position: fixed;
+    inset: 0;
+    background: #0b0b0b;
+    z-index: 999999;
+    /* ★最前面に */
+    display: none;
+    cursor: pointer;
+}
+
+#credits-overlay.visible {
+    display: block;
+}
+
+#credits-overlay.hidden {
+    display: none;
+}
+
+#credits-scroll {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
 }
 
 /* ★幅ではなく“高さに対して”収まるようにする（拡大しすぎ防止） */
-#credits-image{
-  display: block;
-  margin: 0 auto;
+#credits-image {
+    display: block;
+    margin: 0 auto;
 
-  /* 画面内で自然なサイズになるように制限 */
-  width: 100%;
-  height: auto;
+    /* 画面内で自然なサイズになるように制限 */
+    width: 100%;
+    height: auto;
 
-  /* ここがポイント：大きすぎる場合は縮む */
-  transform: translateY(0);
-  will-change: transform;
+    /* ここがポイント：大きすぎる場合は縮む */
+    transform: translateY(0);
+    will-change: transform;
 }
