@@ -78,6 +78,7 @@ body {
     --width: 39em;
     width: var(--width);
     height: calc(var(--width) * var(--ratio));
+    margin-bottom: 2em;
 }
 
 .title-screen button {
@@ -100,9 +101,8 @@ body {
 
 .options {
     display: flex;
-    margin-top: 1em;
     gap: 1.5em;
-    font-size: .8em;
+    font-size: .75em;
 }
 
 .options>button {
@@ -811,6 +811,57 @@ body {
 }
 #objet_maneki:nth-of-type(even):hover {
     rotate: calc(-1*var(--deg));
+}
+
+.leaves-container {
+    max-width: 63vw;
+    width: 100%;
+    aspect-ratio: 14/9;
+    z-index: 9999;
+    margin: 5em auto;
+    position: relative;
+    pointer-events: auto;
+
+}
+.leaves-container > img {
+    position: absolute;
+    transition: transform .1s ease;
+    width: 6em;
+}
+.leaves-container > img:nth-child(1) {
+    top: 0;
+    left: 20%;
+}
+.leaves-container > img:nth-child(2) {
+    right: 30%;
+    top: 10%;
+    width: 7.7em;
+}
+.leaves-container > img:nth-child(3) {
+    bottom: 20%;
+    right: 15%;
+    width: 6em;
+}
+.leaves-container > img:nth-child(4) {
+    top: -5%;
+    right: 10%;
+    width: 5.1em;
+    z-index: 10;
+}
+.leaves-container > img:nth-child(5) {
+    top: -1%;
+    right: 15%;
+    width: 4.6em;
+}
+.leaves-container > img:nth-child(6) {
+    bottom: 14%;
+    left: 5%;
+    width: 4.4em;
+}
+.leaves-container > img:nth-child(7) {
+    top: 25%;
+    left: 11%;
+    width: 5.5em;
 }
 
 .draggable {

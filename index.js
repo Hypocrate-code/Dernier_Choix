@@ -38,6 +38,8 @@ const photosChienContainer = document.getElementById("Calque-collier-souvenir");
 const tv = document.getElementById("tv");
 const lovers = document.getElementById("lovers");
 const objetsManeki = document.getElementById("objets_maneki");
+const leavesContainer = document.querySelector(".leaves-container");
+const leaves = document.querySelectorAll(".leaves-container > img");
 
 
 // audio in memory scenes
@@ -632,6 +634,7 @@ function openMemoryScene(sceneId, object) {
     lovers.classList.add('hidden');
     tv.classList.add('hidden');
     objetsManeki.classList.add("hidden");
+    leavesContainer.classList.add("hidden");
     memoryScene.classList.remove("hidden");
 
     if (sceneId === "music-box") {
@@ -656,7 +659,7 @@ function openMemoryScene(sceneId, object) {
     }else if(sceneId === "collier"){        
         photosChienContainer.classList.remove("hidden");
     }else if(sceneId === "caillou"){
-        console.log("caillou");
+        leavesContainer.classList.remove("hidden");
     } else if (sceneId === "maneki") {
         objetsManeki.classList.remove("hidden");
     } else if (sceneId === "pull") {
@@ -682,8 +685,9 @@ tv.addEventListener("click", ()=> {
     
 })
 
+// Collar memory animations
 const normeDeplacementCollier = 22;
-photosChienContainer.addEventListener("mouseover", (e) => {
+photosChienContainer.addEventListener("mousemove", (e) => {
     const rect = photosChienContainer.getBoundingClientRect();
     photosChien.forEach(photo => {
         // Pos mouse
@@ -694,17 +698,13 @@ photosChienContainer.addEventListener("mouseover", (e) => {
         // Pos photo
         const posX = photo.getBoundingClientRect().left - rect.left + (photo.getBoundingClientRect().width/2);
         const posY = photo.getBoundingClientRect().top - rect.top + (photo.getBoundingClientRect().height/2);
-        console.log( `posY : ${posY}`);
         let x = posX - mouseX;
         let y = posY - mouseY;
-        console.log( `y : ${y}`);
         const norme = Math.sqrt(x**2 + y**2);
-        console.log( `norme : ${norme}`);
-        x/=norme;        
+        x/=norme;
         y/=norme;
         x*=normeDeplacementCollier;
         y*=normeDeplacementCollier;
-        console.log(`translateY(${y}px)`);
         photo.style.transform = `translate(${x}px) translateY(${y}px)`;
     })
 })
@@ -713,6 +713,32 @@ photosChienContainer.addEventListener("mouseleave", (e) => {
         photo.style.transform = `none`;
     })
 })
+
+// Leaves on rock memory animations
+leavesContainer.addEventListener("mousemove", (e) => {
+    const rect = leavesContainer.getBoundingClientRect();
+    leaves.forEach(leaf => {
+        // Pos mouse
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;        
+        // Pos photo
+        const posX = leaf.getBoundingClientRect().left - rect.left + (leaf.getBoundingClientRect().width/2);
+        const posY = leaf.getBoundingClientRect().top - rect.top + (leaf.getBoundingClientRect().height/2);
+        let x = posX - mouseX;
+        let y = posY - mouseY;
+        const norme = Math.sqrt(x**2 + y**2);
+        if (norme < 100) {
+            x/=norme;
+            y/=norme;
+            const normeDeplacementFeuilles = 100 - norme > 0 ? 100 - norme : 0;
+            x*=normeDeplacementFeuilles;
+            y*=normeDeplacementFeuilles;
+            leaf.style.transform = `translate(${x}px) translateY(${y}px)`;    
+        }
+    })
+})
+
+
 
 function playCartonLottie({ action, objectKey, cartonSvg }) {
     if (!cartonLottieOverlay || !window.lottie) return;
