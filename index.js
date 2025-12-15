@@ -59,15 +59,15 @@ const endingOverlay = document.getElementById("ending-overlay");
 let endingAnim = null;
 let endingReadyToExit = false;
 let endingSound = null;
-let drivingLoop = null;      
+let drivingLoop = null;
 
 const ENDING_AUDIO = {
-  default: "assets/ending/sound/fin-defaut.mp3",
-  enfant:  "assets/ending/sound/fin-enfant.mp3",
-  ex:      "assets/ending/sound/fin-ex.mp3",
-  rien:    "assets/ending/sound/fin-garde-rien.mp3",
-  tout:    "assets/ending/sound/fin-garde-tout.mp3",
-  ticket:  "assets/ending/sound/fin-ticket.mp3",
+    default: "assets/ending/sound/fin-defaut.mp3",
+    enfant: "assets/ending/sound/fin-enfant.mp3",
+    ex: "assets/ending/sound/fin-ex.mp3",
+    rien: "assets/ending/sound/fin-garde-rien.mp3",
+    tout: "assets/ending/sound/fin-garde-tout.mp3",
+    ticket: "assets/ending/sound/fin-ticket.mp3",
 };
 
 
@@ -126,12 +126,12 @@ const CARTON_LOTTIE = {
 };
 
 const ENDING_LOTTIE = {
-        "default": "assets/ending/default.json",
-        "enfant": "assets/ending/enfant.json",
-        "ex": "assets/ending/ex.json",
-        "rien": "assets/ending/rien.json",
-        "ticket": "assets/ending/ticket.json",
-        "tout": "assets/ending/tout-.json",
+    "default": "assets/ending/default.json",
+    "enfant": "assets/ending/enfant.json",
+    "ex": "assets/ending/ex.json",
+    "rien": "assets/ending/rien.json",
+    "ticket": "assets/ending/ticket.json",
+    "tout": "assets/ending/tout-.json",
 }
 
 const CARTON_SOUNDS = {
@@ -182,9 +182,9 @@ const CARTON_SOUND_DELAYS = {
 };
 
 const loader = document.querySelector(".loader");
-document.addEventListener("DOMContentLoaded", ()=> {
+document.addEventListener("DOMContentLoaded", () => {
     loader.style.opacity = 0;
-    loader.addEventListener("transitionend", ()=> {
+    loader.addEventListener("transitionend", () => {
         loader.style.display = "none";
     })
 })
@@ -472,7 +472,15 @@ function handleMouseUp(e) {
 
                 playCartonLottie({ action, objectKey, cartonSvg });
 
-                isKeep ? keptObjects.push(activeObject) : thrownObjects.push(activeObject);
+                console.log(`Objet "${objectKey}" → Action: ${action}`);
+
+                if (isKeep) {
+                    keptObjects.push(activeObject);
+                    console.log(`  ✓ Ajouté à keptObjects (total: ${keptObjects.length})`);
+                } else {
+                    thrownObjects.push(activeObject);
+                    console.log(`  ✗ Ajouté à thrownObjects (total: ${thrownObjects.length})`);
+                }
 
                 // Making the object disappear
                 activeObject.classList.remove("object-selected");
@@ -518,6 +526,33 @@ function fadeOverlayTo(targetOpacity, duration = 600, callback) {
         }, duration);
     }
 }
+
+function fadeOutAudio(audio, duration = 500, callback) {
+    if (!audio || audio.paused) {
+        if (callback) callback();
+        return;
+    }
+
+    const startVolume = audio.volume;
+    const startTime = performance.now();
+
+    function fade(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        audio.volume = startVolume * (1 - progress);
+
+        if (progress < 1) {
+            requestAnimationFrame(fade);
+        } else {
+            audio.volume = 0;
+            if (callback) callback();
+        }
+    }
+
+    requestAnimationFrame(fade);
+}
+
 
 function startSceneCaption(object, defaultInterval = 3500, fadeMs = 250) {
     if (!sceneCaption) return;
@@ -642,9 +677,9 @@ function openMemoryScene(sceneId, object) {
         polaroid2.classList.remove("hidden");
         boundary.classList.remove('hidden');
 
-    }else if(sceneId === "collier"){        
+    } else if (sceneId === "collier") {
         photosChienContainer.classList.remove("hidden");
-        photosChienContainer.addEventListener("click", ()=> {
+        photosChienContainer.addEventListener("click", () => {
             actualVoiceMemory.pause();
             actualAmbianceSound && actualAmbianceSound.pause();
             stopSceneCaption();
@@ -653,14 +688,14 @@ function openMemoryScene(sceneId, object) {
             fadeOverlayTo(0, 800, () => {
                 startBoxSelection(activeObject);
             });
-        }, {once: true})
-    }else if(sceneId === "caillou"){
+        }, { once: true })
+    } else if (sceneId === "caillou") {
         actualAmbianceSound = new Audio("audios/caillou/pluie.mp3");
         actualAmbianceSound.loop = true;
         actualAmbianceSound.volume = 0.85;
         actualAmbianceSound.play();
         leavesContainer.classList.remove("hidden");
-        leavesContainer.addEventListener("click", ()=> {
+        leavesContainer.addEventListener("click", () => {
             actualVoiceMemory.pause();
             actualAmbianceSound && actualAmbianceSound.pause();
             stopSceneCaption();
@@ -669,7 +704,7 @@ function openMemoryScene(sceneId, object) {
             fadeOverlayTo(0, 800, () => {
                 startBoxSelection(activeObject);
             });
-        }, {once: true})
+        }, { once: true })
     } else if (sceneId === "maneki") {
         actualAmbianceSound = new Audio("audios/maneki/furin-loop.mp3");
         actualAmbianceSound.loop = true;
@@ -677,11 +712,11 @@ function openMemoryScene(sceneId, object) {
         objetsManeki.classList.remove("hidden");
     } else if (sceneId === "pull") {
         lovers.classList.remove('hidden');
-        tv.classList.remove('hidden'); 
+        tv.classList.remove('hidden');
     }
 }
 
-tv.addEventListener("click", ()=> {
+tv.addEventListener("click", () => {
     if (tv.src.includes("kiki")) {
         tv.src = "assets/souvenirs/parts/pull/got.svg";
     }
@@ -695,7 +730,7 @@ tv.addEventListener("click", ()=> {
         tv.src = "assets/souvenirs/parts/pull/kiki.svg";
     }
 
-    
+
 })
 
 // Collar memory animations
@@ -706,17 +741,17 @@ photosChienContainer.addEventListener("mousemove", (e) => {
         // Pos mouse
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
-        
+
         // Pos photo
-        const posX = photo.getBoundingClientRect().left - rect.left + (photo.getBoundingClientRect().width/2);
-        const posY = photo.getBoundingClientRect().top - rect.top + (photo.getBoundingClientRect().height/2);
+        const posX = photo.getBoundingClientRect().left - rect.left + (photo.getBoundingClientRect().width / 2);
+        const posY = photo.getBoundingClientRect().top - rect.top + (photo.getBoundingClientRect().height / 2);
         let x = posX - mouseX;
         let y = posY - mouseY;
-        const norme = Math.sqrt(x**2 + y**2);
-        x/=norme;
-        y/=norme;
-        x*=normeDeplacementCollier;
-        y*=normeDeplacementCollier;
+        const norme = Math.sqrt(x ** 2 + y ** 2);
+        x /= norme;
+        y /= norme;
+        x *= normeDeplacementCollier;
+        y *= normeDeplacementCollier;
         photo.style.transform = `translate(${x}px) translateY(${y}px)`;
     })
 })
@@ -732,22 +767,22 @@ leavesContainer.addEventListener("mousemove", (e) => {
     leaves.forEach(leaf => {
         // Pos mouse
         const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;        
+        const mouseY = e.clientY - rect.top;
         // Pos photo
-        const posX = leaf.getBoundingClientRect().left - rect.left + (leaf.getBoundingClientRect().width/2);
-        const posY = leaf.getBoundingClientRect().top - rect.top + (leaf.getBoundingClientRect().height/2);
+        const posX = leaf.getBoundingClientRect().left - rect.left + (leaf.getBoundingClientRect().width / 2);
+        const posY = leaf.getBoundingClientRect().top - rect.top + (leaf.getBoundingClientRect().height / 2);
         let x = posX - mouseX;
         let y = posY - mouseY;
-        const norme = Math.sqrt(x**2 + y**2);
-        x/=norme;
-        y/=norme;
+        const norme = Math.sqrt(x ** 2 + y ** 2);
+        x /= norme;
+        y /= norme;
         const normeDeplacementFeuilles = norme < 100 ? 100 - norme : 0;
-        if(norme < 100 && !leaf.dataset.hasPlayedASound == true) {
+        if (norme < 100 && !leaf.dataset.hasPlayedASound == true) {
             leaf.dataset.hasPlayedASound = true;
             new Audio(`./audios/caillou/sound-effects/leaf-${Math.floor(Math.random() * 3) + 1}.mp3`).play();
         }
-        x*=normeDeplacementFeuilles;
-        y*=normeDeplacementFeuilles;
+        x *= normeDeplacementFeuilles;
+        y *= normeDeplacementFeuilles;
         leaf.style.transform = `translate(${x}px) translateY(${y}px)`;
 
     })
@@ -811,12 +846,20 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
             carton.classList.remove("hidden");
         });
 
-        // Arrêter et nettoyer l'audio et le timeout
+        // Arrêter et nettoyer le timeout
         if (soundTimeout) {
             clearTimeout(soundTimeout);
             soundTimeout = null;
         }
-        if (cartonSound) {
+
+        // Faire un fondu du son avant de l'arrêter
+        if (cartonSound && !cartonSound.paused) {
+            fadeOutAudio(cartonSound, 500, () => {
+                cartonSound.pause();
+                cartonSound.currentTime = 0;
+                cartonSound = null;
+            });
+        } else if (cartonSound) {
             cartonSound.pause();
             cartonSound.currentTime = 0;
             cartonSound = null;
@@ -824,158 +867,188 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
 
         const TOTAL_OBJECTS = 8;
         if (keptObjects.length + thrownObjects.length >= TOTAL_OBJECTS) {
-        playEnding();
+            playEnding();
         }
     });
 }
 
 function decideEndingKey() {
     const keptKeys = keptObjects
-    .map(o => o.parentElement?.dataset?.name)
-    .filter(Boolean);
+        .map(o => o.parentElement?.dataset?.name)
+        .filter(Boolean);
 
     const thrownKeys = thrownObjects
-    .map(o => o.parentElement?.dataset?.name)
-    .filter(Boolean);
+        .map(o => o.parentElement?.dataset?.name)
+        .filter(Boolean);
 
     const keptSet = new Set(keptKeys);
     const thrownSet = new Set(thrownKeys);
 
-    // 全部keep
-    if (keptKeys.length === 8) return "tout";
+    console.log("=== DÉCISION DE FIN ===");
+    console.log("Objets gardés:", keptKeys);
+    console.log("Objets jetés:", thrownKeys);
+    console.log("Nombre gardés:", keptKeys.length);
+    console.log("Nombre jetés:", thrownKeys.length);
 
-    // 全部throw
-    if (thrownKeys.length === 8) return "rien";
-
-    // ex系
-    if (keptSet.has("pull") || keptSet.has("maneki")) return "ex";
-    // enfant系
-    if (
-    keptSet.has("dessin") ||
-    keptSet.has("collier") ||
-    keptKeys.length < 4
-    ) {
-    return "enfant";
+    // Tout gardé
+    if (keptKeys.length === 8) {
+        console.log("→ Fin choisie: TOUT (tous les objets gardés)");
+        return "tout";
     }
 
-    // ticketをthrowした
-    if (thrownSet.has("ticket")) return "ticket";
+    // Tout jeté
+    if (thrownKeys.length === 8) {
+        console.log("→ Fin choisie: RIEN (tous les objets jetés)");
+        return "rien";
+    }
 
+    // Ticket jeté (priorité haute car c'est une fin spécifique)
+    if (thrownSet.has("ticket")) {
+        console.log("→ Fin choisie: TICKET (ticket jeté)");
+        return "ticket";
+    }
+
+    // Fin EX : si on jette les objets liés à l'ex (pull ET maneki)
+    const hasExObjects = thrownSet.has("pull") && thrownSet.has("maneki");
+    console.log("Condition EX:");
+    console.log("  - Pull jeté?", thrownSet.has("pull"));
+    console.log("  - Maneki jeté?", thrownSet.has("maneki"));
+    console.log("  → A jeté LES DEUX objets de l'ex:", hasExObjects);
+
+    if (hasExObjects) {
+        console.log("→ Fin choisie: EX");
+        return "ex";
+    }
+
+    // Fin ENFANT : si on garde les objets liés à l'enfance (dessin ET collier)
+    const hasChildObjects = keptSet.has("dessin") && keptSet.has("collier");
+    console.log("Condition ENFANT:");
+    console.log("  - Dessin gardé?", keptSet.has("dessin"));
+    console.log("  - Collier gardé?", keptSet.has("collier"));
+    console.log("  → A gardé LES DEUX objets de l'enfance:", hasChildObjects);
+
+    if (hasChildObjects) {
+        console.log("→ Fin choisie: ENFANT");
+        return "enfant";
+    }
+
+    // Par défaut
+    console.log("→ Fin choisie: DEFAULT");
     return "default";
 }
 
 function playEnding() {
-  if (!endingOverlay || !window.lottie) return;
+    if (!endingOverlay || !window.lottie) return;
 
-  const key = decideEndingKey();
-  const src = ENDING_LOTTIE[key] || ENDING_LOTTIE.default;
-  const audioSrc = ENDING_AUDIO[key] || ENDING_AUDIO.default;
+    const key = decideEndingKey();
+    const src = ENDING_LOTTIE[key] || ENDING_LOTTIE.default;
+    const audioSrc = ENDING_AUDIO[key] || ENDING_AUDIO.default;
 
-  // 画面をエンディングモードに（操作止める）
-  endingReadyToExit = false;
-  endingOverlay.classList.remove("hidden");
-  endingOverlay.classList.add("visible");
-  endingOverlay.style.pointerEvents = "none";
-  sceneContainer.style.pointerEvents = "none";
+    // 画面をエンディングモードに（操作止める）
+    endingReadyToExit = false;
+    endingOverlay.classList.remove("hidden");
+    endingOverlay.classList.add("visible");
+    endingOverlay.style.pointerEvents = "none";
+    sceneContainer.style.pointerEvents = "none";
 
-  // 前のendingを掃除
-  if (endingAnim) {
-    endingAnim.destroy();
-    endingAnim = null;
-  }
-  endingOverlay.innerHTML = "";
+    // 前のendingを掃除
+    if (endingAnim) {
+        endingAnim.destroy();
+        endingAnim = null;
+    }
+    endingOverlay.innerHTML = "";
 
-  // 既存音を停止
-  if (endingSound) {
-    endingSound.pause();
-    endingSound.currentTime = 0;
-    endingSound = null;
-  }
-  if (drivingLoop) {
-    drivingLoop.pause();
-    drivingLoop.currentTime = 0;
-    drivingLoop = null;
-  }
+    // 既存音を停止
+    if (endingSound) {
+        endingSound.pause();
+        endingSound.currentTime = 0;
+        endingSound = null;
+    }
+    if (drivingLoop) {
+        drivingLoop.pause();
+        drivingLoop.currentTime = 0;
+        drivingLoop = null;
+    }
 
-  // ★ticket以外なら driving-loop をループ再生
-  if (key !== "ticket") {
-    drivingLoop = new Audio("assets/ending/sound/driving-loop.mp3"); // パスは適宜
-    drivingLoop.loop = true;
-    drivingLoop.volume = 1.0; // 好みで（エンディング音とぶつかるなら下げる）
-    drivingLoop.play().catch(err => console.warn("Driving loop blocked:", err));
-  }
+    // ★ticket以外なら driving-loop をループ再生
+    if (key !== "ticket") {
+        drivingLoop = new Audio("assets/ending/sound/driving-loop.mp3"); // パスは適宜
+        drivingLoop.loop = true;
+        drivingLoop.volume = 1.0; // 好みで（エンディング音とぶつかるなら下げる）
+        drivingLoop.play().catch(err => console.warn("Driving loop blocked:", err));
+    }
 
-  // エンディング固有音を再生
-  if (audioSrc) {
-    endingSound = new Audio(audioSrc);
-    endingSound.volume = 1.0;
-    endingSound.play().catch(err => console.warn("Ending audio blocked:", err));
-  }
+    // エンディング固有音を再生
+    if (audioSrc) {
+        endingSound = new Audio(audioSrc);
+        endingSound.volume = 1.0;
+        endingSound.play().catch(err => console.warn("Ending audio blocked:", err));
+    }
 
-  // Lottie再生
-  endingAnim = lottie.loadAnimation({
-    container: endingOverlay,
-    renderer: "svg",
-    loop: false,
-    autoplay: true,
-    path: src
-  });
+    // Lottie再生
+    endingAnim = lottie.loadAnimation({
+        container: endingOverlay,
+        renderer: "svg",
+        loop: false,
+        autoplay: true,
+        path: src
+    });
 
-  endingAnim.addEventListener("complete", () => {
-    endingReadyToExit = true;
+    endingAnim.addEventListener("complete", () => {
+        endingReadyToExit = true;
 
-    // アニメ後：クリックでタイトルへ戻れるようにする
-    endingOverlay.style.pointerEvents = "auto";
-    endingOverlay.addEventListener("click", returnToTitle, { once: true });
-  });
+        // アニメ後：クリックでタイトルへ戻れるようにする
+        endingOverlay.style.pointerEvents = "auto";
+        endingOverlay.addEventListener("click", returnToTitle, { once: true });
+    });
 }
 function returnToTitle() {
-  // エンディング片付け
+    // エンディング片付け
     window.location.reload();
 }
 
-function startCreditsScroll(durationMs = 500000, paddingPx = 40) {    
-  if (!creditsOverlay || !creditsImg) return;
+function startCreditsScroll(durationMs = 500000, paddingPx = 40) {
+    if (!creditsOverlay || !creditsImg) return;
 
-  // 表示
-  creditsOverlay.classList.remove("hidden");
-  creditsOverlay.classList.add("visible");
-  creditsOverlay.setAttribute("aria-hidden", "false");
+    // 表示
+    creditsOverlay.classList.remove("hidden");
+    creditsOverlay.classList.add("visible");
+    creditsOverlay.setAttribute("aria-hidden", "false");
 
-  // 既存のアニメがあれば止める
-  if (creditsRAF) cancelAnimationFrame(creditsRAF);
+    // 既存のアニメがあれば止める
+    if (creditsRAF) cancelAnimationFrame(creditsRAF);
 
-  // 画像ロード後にスクロール開始
-  const run = () => {
-    const viewportH = window.innerHeight;
-    const imgH = creditsImg.getBoundingClientRect().height;
+    // 画像ロード後にスクロール開始
+    const run = () => {
+        const viewportH = window.innerHeight;
+        const imgH = creditsImg.getBoundingClientRect().height;
 
-    // 下から出てきて、上に抜けるまで
-    const fromY = viewportH + paddingPx;
-    const toY = -(imgH + paddingPx);
+        // 下から出てきて、上に抜けるまで
+        const fromY = viewportH + paddingPx;
+        const toY = -(imgH + paddingPx);
 
-    const start = performance.now();
+        const start = performance.now();
 
-    const tick = (now) => {
-      const t = Math.min(1, (now - start) / durationMs);
-      const y = fromY + (toY - fromY) * t;
-      creditsImg.style.transform = `translateY(${y}px)`;
+        const tick = (now) => {
+            const t = Math.min(1, (now - start) / durationMs);
+            const y = fromY + (toY - fromY) * t;
+            creditsImg.style.transform = `translateY(${y}px)`;
 
-      if (t < 1) {
+            if (t < 1) {
+                creditsRAF = requestAnimationFrame(tick);
+            } else {
+                // 最後まで流れたら止める（クリック待ち）
+                creditsRAF = null;
+            }
+        };
+
         creditsRAF = requestAnimationFrame(tick);
-      } else {
-        // 最後まで流れたら止める（クリック待ち）
-        creditsRAF = null;
-      }
     };
 
-    creditsRAF = requestAnimationFrame(tick);
-  };
+    if (creditsImg.complete) run();
+    else creditsImg.onload = run;
 
-  if (creditsImg.complete) run();
-  else creditsImg.onload = run;
-
-  // クリックでリロード
-  creditsOverlay.addEventListener("click", () => location.reload(), { once: true });
+    // クリックでリロード
+    creditsOverlay.addEventListener("click", () => location.reload(), { once: true });
 }
 
