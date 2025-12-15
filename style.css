@@ -792,6 +792,26 @@ body {
     left: 50%;
     transform: translateX(-50%);
 }
+#objets_maneki {
+    position: absolute;
+    right: 12em;
+    bottom: 7em;
+    width: 20em;
+}
+#objet_maneki {
+    --deg: 8deg;
+    display: block;
+    transform-origin: bottom center;
+    transform-box: fill-box;
+    transition: rotate .3s ease;
+    pointer-events: auto;
+}
+#objet_maneki:nth-of-type(odd):hover {
+    rotate: var(--deg);
+}
+#objet_maneki:nth-of-type(even):hover {
+    rotate: calc(-1*var(--deg));
+}
 
 .draggable {
     position: absolute;

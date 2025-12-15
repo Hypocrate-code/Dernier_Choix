@@ -37,6 +37,7 @@ const photosChien = document.querySelectorAll("#photo-chien");
 const photosChienContainer = document.getElementById("Calque-collier-souvenir");
 const tv = document.getElementById("tv");
 const lovers = document.getElementById("lovers");
+const objetsManeki = document.getElementById("objets_maneki");
 
 
 // audio in memory scenes
@@ -246,7 +247,7 @@ objects.forEach(object => {
         if (activeObject !== null) { return; }
         activeObject = object;
         const sceneId = object.parentElement.dataset.name || "static";
-        // scenePhoto.src = object.dataset.scene;
+        scenePhoto.src = object.dataset.scene;
         const audio = new Audio(AUDIOS_SRC[activeObject.parentElement.dataset.name]);
 
         // Arrêter les animations et sons des cartons en cours
@@ -630,6 +631,7 @@ function openMemoryScene(sceneId, object) {
     boundary.classList.add('hidden');
     lovers.classList.add('hidden');
     tv.classList.add('hidden');
+    objetsManeki.classList.add("hidden");
     memoryScene.classList.remove("hidden");
 
     if (sceneId === "music-box") {
@@ -656,7 +658,7 @@ function openMemoryScene(sceneId, object) {
     }else if(sceneId === "caillou"){
         console.log("caillou");
     } else if (sceneId === "maneki") {
-        console.log("maneki");
+        objetsManeki.classList.remove("hidden");
     } else if (sceneId === "pull") {
         lovers.classList.remove('hidden');
         tv.classList.remove('hidden'); 
@@ -893,7 +895,7 @@ function returnToTitle() {
     window.location.reload();
 }
 
-function startCreditsScroll(durationMs = 500000, paddingPx = 40) {
+function startCreditsScroll(durationMs = 500000, paddingPx = 40) {    
   if (!creditsOverlay || !creditsImg) return;
 
   // 表示
