@@ -126,7 +126,7 @@ const CARTON_LOTTIE = {
 };
 
 const ENDING_LOTTIE = {
-    "default": "assets/ending/default.json",
+    "default": "assets/ending/defaut.json",
     "enfant": "assets/ending/enfant.json",
     "ex": "assets/ending/ex.json",
     "rien": "assets/ending/rien.json",
