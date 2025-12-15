@@ -101,17 +101,6 @@ const AUDIOS_SRC = {
     "ticket": "audios/ticket/audio.mp3"
 }
 
-const SOUND_EFFECTS_SRC = {
-    "music-box": "",
-    "caillou": "",
-    "collier": "",
-    "dessin": "",
-    "maneki": "",
-    "fauteuil": "",
-    "pull": "",
-    "ticket": ""
-}
-
 const CARTON_LOTTIE = {
     throw: {
         "music-box": "assets/objets/cartons/musique-donner/musique-donner.json",
@@ -242,6 +231,7 @@ startBtn.addEventListener("click", () => {
 })
 
 
+let actualVoiceMemory;
 
 
 objects.forEach(object => {
@@ -250,7 +240,7 @@ objects.forEach(object => {
         activeObject = object;
         const sceneId = object.parentElement.dataset.name || "static";
         scenePhoto.src = object.dataset.scene;
-        const audio = new Audio(AUDIOS_SRC[activeObject.parentElement.dataset.name]);
+        actualVoiceMemory = new Audio(AUDIOS_SRC[activeObject.parentElement.dataset.name]);
 
         // Arrêter les animations et sons des cartons en cours
         if (cartonLottieAnim) {
@@ -281,11 +271,11 @@ objects.forEach(object => {
 
             openMemoryScene(sceneId, activeObject);
 
-            audio.play();
+            actualVoiceMemory.play();
             startSceneCaption(activeObject);
 
             scenePhoto.addEventListener("click", () => {
-                audio.pause();
+                actualVoiceMemory.pause();
                 umino.pause();
                 stopSceneCaption();
                 overlay.classList.add("hidden");
@@ -658,6 +648,15 @@ function openMemoryScene(sceneId, object) {
 
     }else if(sceneId === "collier"){        
         photosChienContainer.classList.remove("hidden");
+        photosChienContainer.addEventListener("click", ()=> {
+            actualVoiceMemory.pause();
+            stopSceneCaption();
+            overlay.classList.add("hidden");
+            scenePhoto.src = "";
+            fadeOverlayTo(0, 800, () => {
+                startBoxSelection(activeObject);
+            });
+        }, {once: true})
     }else if(sceneId === "caillou"){
         leavesContainer.classList.remove("hidden");
     } else if (sceneId === "maneki") {
@@ -727,14 +726,17 @@ leavesContainer.addEventListener("mousemove", (e) => {
         let x = posX - mouseX;
         let y = posY - mouseY;
         const norme = Math.sqrt(x**2 + y**2);
-        if (norme < 100) {
-            x/=norme;
-            y/=norme;
-            const normeDeplacementFeuilles = 100 - norme > 0 ? 100 - norme : 0;
-            x*=normeDeplacementFeuilles;
-            y*=normeDeplacementFeuilles;
-            leaf.style.transform = `translate(${x}px) translateY(${y}px)`;    
+        x/=norme;
+        y/=norme;
+        const normeDeplacementFeuilles = norme < 100 ? 100 - norme : 0;
+        if(norme < 100 && !leaf.dataset.hasPlayedASound == true) {
+            leaf.dataset.hasPlayedASound = true;
+            new Audio(`./audios/caillou/sound-effects/leaf-${Math.floor(Math.random() * 3) + 1}.mp3`).play();
         }
+        x*=normeDeplacementFeuilles;
+        y*=normeDeplacementFeuilles;
+        leaf.style.transform = `translate(${x}px) translateY(${y}px)`;
+
     })
 })
 
