@@ -1,50 +1,284 @@
-
 :root {
     --glow-color: rgb(249, 255, 216);
     --glow: drop-shadow(0 0 .3em var(--glow-color));
+    --grab-color: rgb(255, 149, 149);
+    --grab: drop-shadow(0 0 .3em var(--grab-color));
+    --bg-color: #392440;
+    --cream: #F8F2ED;
+    --beige: #ECDACA;
+    --light-brown: #C9AB96;
+    --brown: #9F7665;
+    --dark-brown: #4C3429;
+    --dark-dark-brown: #231F1F;
+    --secondary-color: #7F95D1;
+    --transition-duration: .5s;
+    --sans-serif-font: "Cabin", sans-serif;
+    --serif-font: "Alice", serif;
+}
+
+.loader {
+    position: fixed;
+    inset: 0;
+    background: black;
+    z-index: 99999;
+    transition: opacity .7s ease-in .5s;
+}
+
+*,
+*::after,
+*::before {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+button {
+    font-family: var(--sans-serif-font);
 }
 
 * {
     -webkit-tap-highlight-color: transparent;
 }
 
+html {
+    background: #2b2939;
+    animation: bg-intro 50s linear paused forwards;
+    transition: background-color var(--transition-duration) ease;
+}
+
 body {
-    height: 95vh;
-    /* overflow: hidden; */
+    height: 100vh;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+
+.title-screen {
+    font-size: .9rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-screen.disappear {
+    animation: disappear var(--transition-duration) ease forwards;
+}
+
+.title-screen>* {
+    display: block;
+    font-family: var(--sans-serif-font);
+}
+
+.title-screen dotlottie-wc {
+    --ratio: calc(741 / 1114);
+    --width: 39em;
+    width: var(--width);
+    height: calc(var(--width) * var(--ratio));
+    margin-bottom: 2em;
+}
+
+.title-screen button {
+    background: var(--beige);
+    color: var(--brown);
+    border: .1em solid var(--light-brown);
+    font-weight: 500;
+    margin-block: .4em;
+    cursor: pointer;
+    border-radius: 5em;
+    appearance: none;
+    border: none;
+    padding: .55em 2.5em;
+    font-size: 1.6em;
+    margin-top: 1em;
+    --outline: var(--light-brown);
+    transition: outline-width .1s ease-out;
+    outline: 0em solid var(--outline);
+}
+
+.options {
+    display: flex;
+    gap: 1.5em;
+    font-size: .75em;
+}
+
+.options>button {
+    --outline: var(--brown);
+    padding-inline: 3.1em;
+    padding-: .57em;
+    background: var(--cream);
+    color: var(--brown);
+    /* font-size: ; */
+}
+
+.title-screen button:hover {
+    outline-width: .1em;
+}
+
 .scene-container {
-    font-size: 1.3vw;
+    --height: 100vh;
     --ratio: calc(1352 / 845);
-    --width: 60em;
-    --height: calc(  var(--width) * 845 / 1352  );
+    --width: calc(var(--height) * var(--ratio));
+    --font-size: calc(var(--height) * .0268);
+    font-size: var(--font-size);
     width: var(--width);
     height: var(--height);
-    position: relative;
-    background-image: url("assets/scene.svg");
+    position: fixed;
+    background-image: url("assets/scenes/scene-sans-objet.svg");
     background-repeat: no-repeat;
     background-size: contain;
+    animation: fade-in var(--transition-duration) ease forwards;
+    opacity: 1;
+    transition: opacity 0.6s ease;
 }
-.scene-container > svg,
-.scene-container > img {
+
+.intro {
+    --duration: 3s;
+    --delay: 10s;
+    /* --duration: 1s;
+    --delay: 3s; */
+    position: absolute;
+    inset: 0;
+    z-index: 2000;
+    animation: disappear var(--duration) linear forwards;
+    animation-play-state: paused;
+    background-repeat: no-repeat;
+}
+
+#skipIntro {
+    z-index: 999999;
+    font-family: var(--sans-serif-font);
+    font-style: italic;
+    top: 1em;
+    display: none;
+    left: 1em;
+    cursor: pointer;
+    position: relative;
+    font-weight: 100 !important;
+    color: var(--cream);
+    opacity: .8;
+    transition: opacity .15s ease;
+    width: max-content;
+}
+
+#skipIntro::before {
+    display: block;
+    content: "";
+    position: absolute;
+    bottom: -.1em;
+    width: 100%;
+    border-radius: 1em;
+    height: .09em;
+    background: var(--cream);
+}
+
+#skipIntro.visible {
+    display: block;
+}
+
+@keyframes bg-intro {
+    0% {
+        background: #2b2939;
+    }
+
+    20% {
+        background: #2b2939;
+    }
+
+    26% {
+        background: #4A4751;
+    }
+
+    46% {
+        background: #4A4751;
+    }
+
+    52% {
+        background: #696369;
+    }
+
+    72% {
+        background: #696369;
+    }
+
+    78% {
+        background: #f9ecd7;
+    }
+
+    to {
+        background: #f9ecd7;
+    }
+}
+
+.intro:nth-child(1) {
+    --duration: 3s;
+    animation-delay: calc(var(--delay) * 3 + var(--duration) * 2);
+    background-image: url("./assets/scenes/intro/3.svg");
+}
+
+.intro:nth-child(2) {
+    animation-delay: calc(var(--delay) * 2 + var(--duration));
+    background-image: url("./assets/scenes/intro/2.svg");
+}
+
+.intro:nth-child(3) {
+    animation-delay: var(--delay);
+    background-image: url("./assets/scenes/intro/1.svg");
+}
+
+.scene-container svg {
     --size: 5em;
+    display: block;
     width: var(--size);
     height: var(--size);
-    overflow: visible;    
+    overflow: visible;
+}
+
+.scene-container.fade-out {
+    opacity: 0;
+}
+
+.grabble-object {
+    cursor: pointer;
+    transition: filter 0.27s ease;
+    transform-origin: center;
+    animation: wiggle 420ms steps(6, end) .27s;
+}
+
+.grabble-object:hover {
+    filter: var(--grab);
 }
 
 
 .hoverable-object {
-    transform-origin: center;
     cursor: pointer;
     transition: filter 0.27s ease;
+    transform-origin: center;
 }
-.hoverable-object:hover {
+
+.hoverable-object:hover,
+.object-selected {
+    transform-origin: center;
     filter: var(--glow);
     animation: wiggle 420ms steps(6, end) .27s;
+}
+
+.object-selected {
+    cursor: grab;
+    /* animation: wiggle 420ms steps(6, end) .27s inf; */
+}
+
+.done {
+    animation: disappear .5s ease forwards;
+}
+
+@keyframes disappear {
+    to {
+        opacity: 0%;
+    }
 }
 
 #Calque-collier-chien,
@@ -54,66 +288,701 @@ body {
 #Calque-maneki,
 #Calque-fauteuil,
 #Calque-sweat,
-#Calque-ticket {
+#Calque-ticket,
+.Calque-carton {
     position: absolute;
-    transform-origin: center;
 }
 
 #Calque-collier-chien {
-    --size: 2em;
-    left: 18em;
-    top: 12em;
+    --size: 2.05em;
+    left: 17.4em;
+    top: 13em;
 }
+
 #Calque-music-box {
-    --size: 4em;
-    right: 13.25em;
-    top: 8em;
+    --size: 4.1em;
+    right: 14.9em;
+    top: 8.9em;
 }
+
 #Calque-caillou {
-    --size: 2.1em;
+    --size: 2.12em;
     z-index: 20;
-    right: 17em;
-    bottom: 16.3em;
+    right: 18.18em;
+    bottom: 19.35em;
 }
+
 #Calque-dessin {
-    --size: 7.7em;
-    right: 22.8em;
-    top: 8.1em;
+    --size: 7.8em;
+    right: 24.7em;
+    top: 8.85em;
 }
+
 #Calque-maneki {
-    --size: 4em;
-    left: 6.5em;
-    top: 16.5em;
+    --size: 4.2em;
+    left: 5.4em;
+    top: 17.7em;
 }
+
 #Calque-fauteuil {
-    --size: 14.4em;
-    right: 4em;
-    bottom: 7em;
+    --size: 15em;
+    right: 2.8em;
+    bottom: 5em;
 }
+
 #Calque-sweat {
-    --size: 4.7em;
-    left: 47%;
-    bottom: 17.3em;
+    --size: 5em;
+    left: 47.5%;
+    bottom: 15.58em;
 }
+
 #Calque-ticket {
-    --size: 2.7em;
-    right: 23.5em;
-    bottom: 8.2em;
+    --size: 2.5em;
+    right: 23.1em;
+    bottom: 6.4em;
+}
+
+
+
+
+
+/* Cartons */
+.Calque-carton {
+    --size: 11em !important;
+    --inline-offset: 5em;
+    z-index: -1;
+    bottom: 0;
+    transform-origin: center;
+    opacity: 0;
+    transform: translateY(1em);
+    transition: opacity .25s ease, transform .5s ease;
+}
+
+.Calque-carton.active {
+    opacity: 1;
+    transform: none;
+}
+
+.Calque-carton.keep {
+    left: var(--inline-offset);
+}
+
+.Calque-carton.throw {
+    right: var(--inline-offset);
+}
+
+
+@keyframes wiggle {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    16% {
+        transform: rotate(-2deg);
+    }
+
+    33% {
+        transform: rotate(2deg);
+    }
+
+    50% {
+        transform: rotate(-2deg);
+    }
+
+    66% {
+        transform: rotate(1deg);
+    }
+
+    83% {
+        transform: rotate(-1deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+
+.scene-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    animation: fade-in .4s ease forwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.scene-overlay img {
+    user-select: none;
+    max-width: 70vw;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: .5em;
+    /* cursor: pointer; */
+}
+
+.hidden {
+    display: none !important;
+}
+
+.scene-caption {
+    position: absolute;
+    /* 画面に対して固定表示 */
+    left: 50%;
+    bottom: 5%;
+    /* 下から5%くらい上 */
+
+    width: 70vw;
+    /* 横幅は画面の80% */
+    padding: 1em 1.5em;
+
+    background: var(--cream);
+    /* 半透明の白 */
+    color: var(--dark-brown);
+    /* テキストは黒 */
+
+    border-radius: .4em;
+    line-height: 1.5;
+    text-align: left;
+
+    opacity: 0;
+    transform: translate(-50%, 0);
+    /* 少し下から浮いてくる */
+    transition: opacity 250ms ease;
+
+    font-family: var(--serif-font);
+    font-weight: 400;
+    font-size: 1em;
+    z-index: 2000;
+    /* scenePhoto より上に */
+    pointer-events: none;
+    /* テキストボックスは操作不要なので消しておく */
+}
+
+.scene-caption.visible {
+    opacity: 1;
+}
+
+.fade-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    z-index: 900;
+}
+
+.fade-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.memory-scene {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+
+.dummy-box {
+    width: 200px;
+    height: 200px;
+    background: black;
+    margin: auto;
+    /* 中央寄せしたいなら */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 完全中央配置 */
 }
 
 
 @media screen and (max-width: 1044px) {
-    .scene-container {
-        font-size: 1.6vw;
+    html {
+        font-size: .9em;
     }
 }
 
-@keyframes wiggle {
-  0%   { transform: rotate(0deg); }
-  16%  { transform: rotate(-2deg); }
-  33%  { transform: rotate(2deg); }
-  50%  { transform: rotate(-2deg); }
-  66%  { transform: rotate(1deg); }
-  83%  { transform: rotate(-1deg); }
-  100% { transform: rotate(0deg); }
+@media screen and (max-width: 704px) {
+    html {
+        font-size: .9em;
+    }
+}
+
+@media screen and (max-aspect-ratio: 1352/845) {
+    .scene-container {
+        --height: calc(var(--width) * var(--ratio));
+        --ratio: calc(845 / 1352);
+        --width: 100vw;
+        --font-size: 1.67vw;
+    }
+}
+
+.memory-container {
+    --height: 100vh;
+    --ratio: calc(1352 / 845);
+    --width: calc(var(--height) * var(--ratio));
+    --font-size: calc(var(--height) * .0268);
+    font-size: var(--font-size);
+    width: var(--width);
+    height: var(--height);
+    position: fixed;
+    opacity: 1;
+    pointer-events: none;
+}
+
+.memory-container svg {
+    --size: 5em;
+    display: block;
+    width: var(--size);
+    height: var(--size);
+    overflow: visible;
+}
+
+#Calque-horloge {
+    --size: 23em;
+    position: absolute;
+    right: 1.5em;
+    bottom: 5.4em;
+}
+
+#Calque-pendule {
+    --size: 10em;
+    position: absolute;
+    right: 8.1em;
+    bottom: 8.4em;
+
+    /* 振り子アニメーション */
+    transform-origin: 50% 0%;
+    /* 上端中央を支点にする */
+    transform-box: fill-box;
+    /* SVGの描画範囲基準にするのがポイント */
+    animation: pendulum-swing 1.6s ease-in-out infinite;
+}
+
+@keyframes pendulum-swing {
+    0% {
+        transform: rotate(-6deg);
+    }
+
+    50% {
+        transform: rotate(6deg);
+    }
+
+    100% {
+        transform: rotate(-6deg);
+    }
+}
+
+#Calque-lamp2 {
+    --size: 17em;
+    position: absolute;
+    right: 5.5em;
+    bottom: 14.4em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-scissors {
+    --size: 6em;
+    position: absolute;
+    right: 18.5em;
+    bottom: 5.4em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-sew {
+    --size: 5em;
+    position: absolute;
+    right: 10.5em;
+    bottom: 6.4em;
+}
+
+#Calque-arm-chair {
+    position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+    right: 21.5em;
+    bottom: 9.4em;
+}
+
+@keyframes chairAppearRotate {
+    from {
+        transform: rotate(-90deg);
+    }
+
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+#arm-chair {
+    --size: 16em;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    /* 好きな軸に調整 */
+}
+
+.arm-chair-rotate-in {
+    animation: chairAppearRotate 0.8s ease-out forwards;
+}
+
+@keyframes scissorCut {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(-12deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+#Calque-scissors:hover {
+    animation: scissorCut 1.0s ease-in-out infinite;
+    transform-origin: center bottom;
+    /* 回転の軸を調整 */
+}
+
+#Calque-sewing-machine {
+    --size: 10em;
+    position: absolute;
+    right: 39.5em;
+    bottom: 10.4em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-sewing-machine:hover {
+    animation: sewingShake 0.2s ease-in-out infinite;
+}
+
+@keyframes sewingShake {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+#Calque-lamp {
+    --size: 19em;
+    position: absolute;
+    right: 32.5em;
+    bottom: 2.4em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+.memory-dark-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    opacity: 0.95;
+    pointer-events: none;
+    /* クリックは下に通す */
+    transition: opacity 0.4s ease;
+    z-index: 5500;
+    /* メモリーシーンより上にする */
+}
+
+#Calque-easter-egg {
+    --size: 4em;
+    position: absolute;
+    left: 9em;
+    top: 2em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-magnet-flower {
+    --size: 4em;
+    position: absolute;
+    left: 4em;
+    top: 6em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-polaroid1 {
+    --size: 5em;
+    position: absolute;
+    left: 9em;
+    top: 14em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-polaroid2 {
+    --size: 5em;
+    position: absolute;
+    left: 3em;
+    top: 19em;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4500;
+}
+
+#Calque-collier-souvenir {
+    z-index: 9999;
+    max-width: 70vw;
+    max-height: 70vh;
+    width: auto;
+    height: auto;
+    margin: 5em auto;
+    border-radius: .5em;
+    overflow: hidden;
+    pointer-events: auto;
+}
+
+#photo-chien {
+    transition: transform .2s ease-out;
+    transform-origin: center;
+}
+
+#tv {
+    width: 12.7em;
+    height: 7em;
+    left: 37.6%;
+    top: 9.3em;
+    border-radius: 0;
+    object-fit: cover;
+    position: absolute;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+#lovers {
+    max-width: 57vw;
+    max-height: 57vh;
+    height: 100%;
+    width: 100%;
+    z-index: 99;
+    user-select: none;
+    position: absolute;
+    bottom: 14.5vh;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#objets_maneki {
+    position: absolute;
+    right: 12em;
+    bottom: 7em;
+    width: 20em;
+}
+
+#objet_maneki {
+    --deg: 8deg;
+    display: block;
+    transform-origin: bottom center;
+    transform-box: fill-box;
+    transition: rotate .3s ease;
+    pointer-events: auto;
+}
+
+#objet_maneki:nth-of-type(odd):hover {
+    rotate: var(--deg);
+}
+
+#objet_maneki:nth-of-type(even):hover {
+    rotate: calc(-1*var(--deg));
+}
+
+.leaves-container {
+    max-width: 63vw;
+    width: 100%;
+    z-index: 0;
+    aspect-ratio: 14/9;
+    margin: 5em auto;
+    position: relative;
+    pointer-events: auto;
+
+}
+
+.leaves-container>img {
+    z-index: 9999;
+    user-select: none;
+    pointer-events: none;
+    position: absolute;
+    transition: transform .1s ease;
+    width: 6em;
+}
+
+.leaves-container>img:nth-child(1) {
+    top: 0;
+    left: 20%;
+}
+
+.leaves-container>img:nth-child(2) {
+    right: 30%;
+    top: 10%;
+    width: 7.7em;
+}
+
+.leaves-container>img:nth-child(3) {
+    bottom: 20%;
+    right: 15%;
+    width: 6em;
+}
+
+.leaves-container>img:nth-child(4) {
+    top: -2%;
+    right: 10%;
+    width: 5.1em;
+    z-index: 10;
+}
+
+.leaves-container>img:nth-child(5) {
+    top: 1%;
+    right: 15%;
+    width: 4.6em;
+}
+
+.leaves-container>img:nth-child(6) {
+    bottom: 14%;
+    left: 5%;
+    width: 4.4em;
+}
+
+.leaves-container>img:nth-child(7) {
+    top: 25%;
+    left: 11%;
+    width: 5.5em;
+}
+
+.draggable {
+    position: absolute;
+    pointer-events: auto;
+    cursor: grab;
+    z-index: 4500;
+    user-select: none;
+}
+
+.draggable.dragging {
+    cursor: grabbing;
+}
+
+#drag-boundary {
+    position: absolute;
+    left: 36em;
+    top: 5em;
+    width: 15em;
+    height: 27em;
+    pointer-events: auto;
+}
+
+
+#carton-lottie-overlay {
+    position: fixed;
+    /* getBoundingClientRect()と相性良い */
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    display: none;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: visible;
+}
+
+/* lottie svgを箱いっぱいにフィットさせる */
+#carton-lottie-overlay svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+}
+
+#ending-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    background: #000;
+    /* 任意。透過にしたいなら消す */
+    pointer-events: none;
+    /* 再生中はクリック無効 */
+}
+
+#ending-overlay.visible {
+    display: block;
+}
+
+#ending-overlay.hidden {
+    display: none;
+}
+
+#ending-overlay svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#credits-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--dark-dark-brown);
+    z-index: 999999;
+    /* ★最前面に */
+    display: none;
+    cursor: pointer;
+}
+
+#credits-overlay.visible {
+    display: block;
+}
+
+#credits-overlay.hidden {
+    display: none;
+}
+
+#credits-scroll {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+/* ★幅ではなく“高さに対して”収まるようにする（拡大しすぎ防止） */
+#credits-image {
+    display: block;
+    margin: 0 auto;
+
+    /* 画面内で自然なサイズになるように制限 */
+    width: 100%;
+    height: auto;
+
+    /* ここがポイント：大きすぎる場合は縮む */
+    transform: translateY(0);
+    will-change: transform;
 }
