@@ -47,7 +47,6 @@ const song = new Audio("./audios/song.mp3");
 song.loop = true;
 const scissorsSound = new Audio("./audios/meuble/sound-effects/ciseaux-tissu.mp3");
 const machineSound = new Audio("./audios/meuble/sound-effects/machine-a-coudre.mp3");
-const umino = new Audio("./audios/boite-a-musique/sound-effects/uminomieru.mp3");
 
 // animation cartons
 const cartonLottieOverlay = document.getElementById("carton-lottie-overlay");
@@ -79,6 +78,8 @@ const creditsImg = document.getElementById("credits-image");
 let creditsRAF = null;
 
 
+let actualVoiceMemory;
+let actualAmbianceSound;
 
 let activeObject = null;
 let currentObject = null;
@@ -231,7 +232,6 @@ startBtn.addEventListener("click", () => {
 })
 
 
-let actualVoiceMemory;
 
 
 objects.forEach(object => {
@@ -276,13 +276,16 @@ objects.forEach(object => {
 
             scenePhoto.addEventListener("click", () => {
                 actualVoiceMemory.pause();
-                umino.pause();
+                actualAmbianceSound && actualAmbianceSound.pause();
                 stopSceneCaption();
                 overlay.classList.add("hidden");
                 scenePhoto.src = "";
                 fadeOverlayTo(0, 800, () => {
                     startBoxSelection(activeObject);
                 });
+            }, { once: true });
+            actualVoiceMemory.addEventListener("ended", () => {
+                stopSceneCaption();
             }, { once: true });
 
         });
@@ -296,7 +299,6 @@ objects.forEach(object => {
 let isDark = false; // 今暗いかどうかを記録
 
 lamp.addEventListener("click", () => {
-    console.log("lamp clicked");
     if (!isDark) {
         darkOverlay.classList.remove("hidden"); // 暗くする
         isDark = true;
@@ -307,7 +309,6 @@ lamp.addEventListener("click", () => {
 });
 
 lamp2.addEventListener("click", () => {
-    console.log("lamp clicked");
     if (!isDark) {
         darkOverlay.classList.remove("hidden"); // 暗くする
         isDark = true;
@@ -342,7 +343,6 @@ sewingMachine.addEventListener("mouseleave", () => {
 });
 
 armChair.addEventListener("click", () => {
-    console.log("ArmChair clicked");
     armChairInner.classList.remove("arm-chair-rotate-in");
     void armChairInner.offsetWidth; // ←リフローでアニメーションをリセット
     armChairInner.classList.add("arm-chair-rotate-in");
@@ -474,7 +474,6 @@ function handleMouseUp(e) {
 
                 isKeep ? keptObjects.push(activeObject) : thrownObjects.push(activeObject);
 
-                umino.pause();
                 // Making the object disappear
                 activeObject.classList.remove("object-selected");
                 activeObject.classList.add("done");
@@ -488,14 +487,12 @@ function handleMouseUp(e) {
                 })
                 activeObject = null;
                 document.removeEventListener("mouseup", handleMouseUp);
-                console.log("objet supprimé");
                 // End of reset
             }
         });
         // If cupboard not under mouse on mouse up -> do nothing
         if (activeObject) {
             activeObject.parentElement.style.pointerEvents = "auto";
-            console.log("objet non supprimé, essaie encore");
         }
     }
     dragging = false;
@@ -606,7 +603,6 @@ function stopSceneCaption() {
 
 function openMemoryScene(sceneId, object) {
 
-    console.log("openMemoryScene called, sceneId =", sceneId);
     memoryScene.classList.add("hidden");
     lamp.classList.add("hidden");
     pendule.classList.add("hidden");
@@ -626,11 +622,10 @@ function openMemoryScene(sceneId, object) {
     tv.classList.add('hidden');
     objetsManeki.classList.add("hidden");
     leavesContainer.classList.add("hidden");
+    darkOverlay.classList.add("hidden");
     memoryScene.classList.remove("hidden");
 
     if (sceneId === "music-box") {
-        umino.volume = 0.8;
-        umino.play();
         lamp.classList.remove("hidden");
         pendule.classList.remove("hidden");
         horloge.classList.remove("hidden");
@@ -651,6 +646,7 @@ function openMemoryScene(sceneId, object) {
         photosChienContainer.classList.remove("hidden");
         photosChienContainer.addEventListener("click", ()=> {
             actualVoiceMemory.pause();
+            actualAmbianceSound && actualAmbianceSound.pause();
             stopSceneCaption();
             overlay.classList.add("hidden");
             scenePhoto.src = "";
@@ -659,8 +655,25 @@ function openMemoryScene(sceneId, object) {
             });
         }, {once: true})
     }else if(sceneId === "caillou"){
+        actualAmbianceSound = new Audio("audios/caillou/pluie.mp3");
+        actualAmbianceSound.loop = true;
+        actualAmbianceSound.volume = 0.85;
+        actualAmbianceSound.play();
         leavesContainer.classList.remove("hidden");
+        leavesContainer.addEventListener("click", ()=> {
+            actualVoiceMemory.pause();
+            actualAmbianceSound && actualAmbianceSound.pause();
+            stopSceneCaption();
+            overlay.classList.add("hidden");
+            scenePhoto.src = "";
+            fadeOverlayTo(0, 800, () => {
+                startBoxSelection(activeObject);
+            });
+        }, {once: true})
     } else if (sceneId === "maneki") {
+        actualAmbianceSound = new Audio("audios/maneki/furin-loop.mp3");
+        actualAmbianceSound.loop = true;
+        actualAmbianceSound.play();
         objetsManeki.classList.remove("hidden");
     } else if (sceneId === "pull") {
         lovers.classList.remove('hidden');
@@ -693,7 +706,6 @@ photosChienContainer.addEventListener("mousemove", (e) => {
         // Pos mouse
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
-        console.log("mouseX : ", mouseX, "mouseY : ", mouseY);
         
         // Pos photo
         const posX = photo.getBoundingClientRect().left - rect.left + (photo.getBoundingClientRect().width/2);
@@ -754,8 +766,6 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
     cartons.forEach(carton => {
         carton.classList.add("hidden");
     });
-
-    console.log(cartonSvg);
 
     // Dimensions fixes pour toutes les animations
     const fixedWidth = 380; // Largeur fixe
