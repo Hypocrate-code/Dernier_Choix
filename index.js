@@ -126,12 +126,12 @@ const CARTON_LOTTIE = {
 };
 
 const ENDING_LOTTIE = {
-    "default": "compressed/assets/ending/default.json",
+    "default": "compressed/assets/ending/defaut.json",
     "enfant": "compressed/assets/ending/enfant.json",
     "ex": "compressed/assets/ending/ex.json",
     "rien": "compressed/assets/ending/rien.json",
     "ticket": "compressed/assets/ending/ticket.json",
-    "tout": "compressed/assets/ending/tout-.json",
+    "tout": "compressed/assets/ending/tout-.json"
 }
 
 const CARTON_SOUNDS = {
@@ -798,21 +798,18 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
     if (!src) return;
 
     const r = cartonSvg.getBoundingClientRect();
-    cartons.forEach(carton => {
-        carton.classList.add("hidden");
-    });
 
     // Dimensions fixes pour toutes les animations
-    const fixedWidth = 380; // Largeur fixe
-    const fixedHeight = 380 // Hauteur fixe
+    const fixedWidth = 327; // Largeur fixe
     const bottomDistance = 15; // Distance fixe depuis le bas de la fenêtre
 
+    // Préparer l'overlay AVANT de cacher les cartons
     cartonLottieOverlay.style.display = "block";
     cartonLottieOverlay.style.left = r.left + (r.width / 2) - (fixedWidth / 2) + "px"; // Centré sur le carton
     cartonLottieOverlay.style.bottom = bottomDistance + "px";
     cartonLottieOverlay.style.top = "auto"; // Désactiver le positionnement par le haut
     cartonLottieOverlay.style.width = fixedWidth + "px";
-    cartonLottieOverlay.style.height = fixedHeight + "px";
+    cartonLottieOverlay.style.height = "auto"; // Hauteur automatique pour respecter le ratio
 
     if (cartonLottieAnim) cartonLottieAnim.destroy();
     cartonLottieOverlay.innerHTML = "";
@@ -829,6 +826,7 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
     }
 
 
+    // Charger et démarrer l'animation Lottie
     cartonLottieAnim = lottie.loadAnimation({
         container: cartonLottieOverlay,
         renderer: "svg",
@@ -837,6 +835,13 @@ function playCartonLottie({ action, objectKey, cartonSvg }) {
         path: src,
 
     });
+
+    // Cacher les cartons APRÈS avoir démarré l'animation (délai pour chevauchement visuel)
+    setTimeout(() => {
+        cartons.forEach(carton => {
+            carton.classList.add("hidden");
+        });
+    }, 200);
 
     cartonLottieAnim.addEventListener("complete", () => {
         cartonLottieOverlay.style.display = "none";
